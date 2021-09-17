@@ -47,3 +47,18 @@ db.projects.insertOne({
     nota001: 'descripcionNota',
   }
 })
+
+db.investigadores.insertOne(
+  {
+    idInvestigador: "001",
+    nombre: "Carlos Gonzalez",
+    horasDedicacion: 5,
+    idProyecto: "proyecto002",
+    usuario: "C.Gonzalez",
+    contraseña: "casa"
+ }
+)
+
+db.projects.find({
+  avance: { $gt: 50 }
+})
