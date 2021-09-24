@@ -7,50 +7,50 @@ const StudentSchema = new Schema({
     id: {
         type: String,
         required: true,
-        min: 3,
-        max: 15
+        minLength: 3,
+        maxLength: 15
     },
     nombre: {
         type: String,
         required: true,
-        min: 3,
-        max: 40
+        minLength: 3,
+        maxLength: 40
     },
     carrera: {
         type: String,
         required: true,
-        min: 3,
-        max: 20
+        minLength: 3,
+        maxLength: 20
     },
     celular: {
         type: String,
         required: true,
-        min: 10,
-        max: 10,
+        minLength: 10,
+        maxLength: 10,
     },
     idProyecto: {
         type: String,
         required: true,
-        min: 3,
-        max: 20
+        minLength: 3,
+        maxLength: 20
     },
     email: {
         type: String,
         required: true,
-        min: 6,
-        max: 30
+        minLength: 6,
+        maxLength: 30
     },
     usuario: {
         type: String,
         required: true,
-        min: 6,
-        max: 15
+        minLength: 6,
+        maxLength: 15
     },
     contrasena: {
         type: String,
         required: true,
-        min: 6,
-        max: 30
+        minLength: 6,
+        maxLength: 30
     },
     activo: {
         type: Boolean,
