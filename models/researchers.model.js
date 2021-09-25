@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
 
-const StudentSchema = new Schema({
+const ResearcherSchema = new Schema({
   id: {
     type: String,
     required: true,
@@ -14,18 +14,6 @@ const StudentSchema = new Schema({
     required: true,
     minLength: 3,
     maxLength: 40,
-  },
-  carrera: {
-    type: String,
-    required: true,
-    minLength: 3,
-    maxLength: 20,
-  },
-  celular: {
-    type: String,
-    required: true,
-    minLength: 10,
-    maxLength: 10,
   },
   idProyecto: {
     type: String,
@@ -59,6 +47,6 @@ const StudentSchema = new Schema({
 });
 
 // Modelo de datos, recibe el nombre de la colección de la base de datos y el esquema
-const StudentModel = mongoose.model('estudiantes', StudentSchema);
+const ResearcherModel = mongoose.model('investigadores', ResearcherSchema);
 
-module.exports = StudentModel;
+module.exports = ResearcherModel;
