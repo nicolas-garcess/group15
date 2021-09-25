@@ -31,13 +31,19 @@ const ResearcherSchema = new Schema({
     type: String,
     required: true,
     minLength: 6,
-    maxLength: 15,
+    maxLength: 30,
   },
   contrasena: {
     type: String,
     required: true,
     minLength: 6,
     maxLength: 30,
+  },
+  horasDedicacion: {
+    type: Number,
+    required: true,
+    min: 8,
+    max: 40,
   },
   activo: {
     type: Boolean,

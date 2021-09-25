@@ -43,7 +43,7 @@ const StudentSchema = new Schema({
     type: String,
     required: true,
     minLength: 6,
-    maxLength: 15,
+    maxLength: 30,
   },
   contrasena: {
     type: String,
