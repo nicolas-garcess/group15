@@ -19,7 +19,9 @@
   "scripts": {
     "test": "mocha",
     "start": "node src/",
-    "dev": "nodemon src/"
+    "dev": "nodemon src/",
+    "lint": "eslint src --ext .js",
+    "lint:fix": "npm run lint --fix"
   },
   "repository": {
     "type": "git",
