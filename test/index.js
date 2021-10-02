@@ -168,4 +168,10 @@ describe('Projects schema validation', () => {
       done();
     });
   });
+  it('estaDisponible should be valid because is a string', (done) => {
+    project.validate((err) => {
+      expect(err?.errors.estaDisponible).to.undefined;
+      done();
+    });
+  });
 });
