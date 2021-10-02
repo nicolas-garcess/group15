@@ -92,14 +92,13 @@ describe('Researchers schema validation', () => {
   });
 });
 
-
 const project = new Project({
   idProyecto: 'proyecto001',
   objetivos: {
     objetivoGeneral: {
       idObjetivo: 'objG001',
       descripcion: 'lorem ipsum',
-      cumplido: false
+      cumplido: false,
     },
     objetivosEspecificos: [
       {
@@ -111,11 +110,11 @@ const project = new Project({
         idObjetivo: 'objE002',
         descripcion: 'lorem ipsum',
         cumplido: false,
-      }
-    ]
+      },
+    ],
   },
   presupuesto: 2000000000,
-  fechaInicial: new Date,
+  fechaInicial: new Date(),
   fechaFinal: 'alguna fecha',
   directorProyecto: 'Claudia Cárdenas',
   estaDisponible: true,
@@ -129,7 +128,7 @@ const project = new Project({
     {
       idEstudiante: 'estudiante002',
       activo: true,
-    }
+    },
   ],
   investigadores: [
     {
@@ -141,7 +140,7 @@ const project = new Project({
     nota001: 'lorem ipsum',
     nota002: 'lorem ipsum',
     nota003: 'lorem ipsum',
-  }
+  },
 });
 
 describe('Projects schema validation', () => {
@@ -160,6 +159,12 @@ describe('Projects schema validation', () => {
   it('avance should be invalid because is greaten than 100', (done) => {
     project.validate((err) => {
       expect(err.errors.avance).to.exist;
+      done();
+    });
+  });
+  it('fase should be valid because is a string', (done) => {
+    project.validate((err) => {
+      expect(err?.errors.fase).to.undefined;
       done();
     });
   });
