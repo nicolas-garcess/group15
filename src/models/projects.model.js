@@ -54,7 +54,7 @@ const ProjectSchema = new Schema({
   notas: {
     type: Schema.Types.Mixed,
     required: true,
-  }
+  },
 });
 
 // Modelo de datos, recibe el nombre de la colección de la base de datos y el esquema
