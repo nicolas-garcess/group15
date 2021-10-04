@@ -1,17 +1,17 @@
-const student = require('../../models/students.model');
+const Student = require('../../models/students.model');
 
 const studentQueries = {
   greet(_, { name }) {
     return `Hello ${name}`;
   },
   async getStudents() {
-    return student.find();
+    return Student.find();
   },
   async getStudentById(_, { id }) {
-    return student.findOne({ id });
+    return Student.findOne({ id });
   },
   async getStudentByEmail(_, { email }) {
-    return student.findOne({ email });
+    return Student.findOne({ email });
   },
 };
 

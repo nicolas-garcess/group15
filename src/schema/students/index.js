@@ -1,7 +1,9 @@
-const studentQueries = require('./query');
 const studentTypes = require('./type');
+const studentQueries = require('./query');
+const studentMutations = require('./mutation');
 
 module.exports = {
-  studentQueries,
   studentTypes,
+  studentQueries,
+  studentMutations,
 };
