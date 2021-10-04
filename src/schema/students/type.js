@@ -1,6 +1,5 @@
 const studentTypes = `
     type Query {
-      greet(name: String!): String
       getStudents: [Student]
       getStudentById(id: String!): Student
       getStudentByEmail(email: String!): Student

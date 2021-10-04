@@ -1,9 +1,6 @@
 const Student = require('../../models/students.model');
 
 const studentQueries = {
-  greet(_, { name }) {
-    return `Hello ${name}`;
-  },
   async getStudents() {
     return Student.find();
   },
