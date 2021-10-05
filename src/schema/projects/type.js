@@ -1,4 +1,6 @@
 const researcherTypes = `
+    scalar DateTime
+
     type Query {
       getProjects: [Project]
       getProjectById(idProyecto: String!): Project
@@ -13,8 +15,8 @@ const researcherTypes = `
       idProyecto: String
       objetivos: Objectives
       presupuesto: Float
-      fechaInicial: Date
-      fechaFinal: Date
+      fechaInicial: DateTime
+      fechaFinal: DateTime
       directorProyecto: String
       estaDisponible: Boolean
       avance: Float
@@ -26,31 +28,31 @@ const researcherTypes = `
 
     input ProjectInput {
       idProyecto: String!
-      objetivos: Objectives!
+      objetivos: ObjectivesInput!
       presupuesto: Float!
-      fechaInicial: Date!
-      fechaFinal: Date!
+      fechaInicial: DateTime!
+      fechaFinal: DateTime!
       directorProyecto: String!
       estaDisponible: Boolean!
       avance: Float!
       fase: String!
-      estudiantes: [ProjecStudent]!
-      investigadores: [ProjectResearcher]!
-      notas: [Note]!
+      estudiantes: [ProjectStudentInput]!
+      investigadores: [ProjectResearcherInput]!
+      notas: [NoteInput]!
     }
 
     input ProjectUpdate {
-      objetivos: Objectives
+      objetivos: ObjectivesUpdate
       presupuesto: Float
-      fechaInicial: Date
-      fechaFinal: Date
+      fechaInicial: DateTime
+      fechaFinal: DateTime
       directorProyecto: String
       estaDisponible: Boolean
       avance: Float
       fase: String
-      estudiantes: [ProjecStudent]
-      investigadores: [ProjectResearcher]
-      notas: [Note]
+      estudiantes: [ProjectStudentUpdate]
+      investigadores: [ProjectResearcherUpdate]
+      notas: [NoteUpdate]
     }
 
     type Objectives {
@@ -75,6 +77,58 @@ const researcherTypes = `
     }
 
     type Note {
+      idNota: String
+      descripcion: String
+    }
+
+    input ObjectivesInput {
+      objetivoGeneral: ObjectiveInput
+      objetivosEspecificos: [ObjectiveInput]
+    }
+
+    input ObjectiveInput {
+      idObjetivo: String
+      descripcion: String
+      cumplido: Boolean
+    }
+
+    input ProjectStudentInput {
+      idEstudiante: String
+      activo: Boolean
+    }
+
+    input ProjectResearcherInput {
+      idInvestigador: String
+      activo: Boolean
+    }
+
+    input NoteInput {
+      idNota: String
+      descripcion: String
+    }
+
+    input ObjectivesUpdate {
+      objetivoGeneral: ObjectiveUpdate
+      objetivosEspecificos: [ObjectiveUpdate]
+    }
+
+    input ObjectiveUpdate {
+      idObjetivo: String
+      descripcion: String
+      cumplido: Boolean
+    }
+
+    input ProjectStudentUpdate {
+      idEstudiante: String
+      activo: Boolean
+    }
+
+    input ProjectResearcherUpdate {
+      idInvestigador: String
+      activo: Boolean
+    }
+
+    input NoteUpdate {
       idNota: String
       descripcion: String
     }
