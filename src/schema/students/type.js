@@ -36,15 +36,14 @@ const studentTypes = `
     }
 
     input StudentUpdate {
-      id: String!
-      nombre: String!
-      carrera: String!
-      celular: String!
-      idProyecto: String!
-      email: String!
-      usuario: String!
+      nombre: String
+      carrera: String
+      celular: String
+      idProyecto: String
+      email: String
+      usuario: String
       contrasena: String
-      activo: Boolean!
+      activo: Boolean
     }
 `;
 

@@ -34,14 +34,14 @@ const researcherTypes = `
     }
 
     input ResearcherUpdate {
-      id: String!
-      nombre: String!
-      idProyecto: String!
-      email: String!
-      usuario: String!
+      id: String
+      nombre: String
+      idProyecto: String
+      email: String
+      usuario: String
       contrasena: String
-      horasDedicacion: Int!
-      activo: Boolean!
+      horasDedicacion: Int
+      activo: Boolean
     }
 `;
 
