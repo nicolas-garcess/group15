@@ -1,13 +1,12 @@
 const studentTypes = `
     type Query {
-      getStudents: [Student]
-      getStudentById(id: String!): Student
-      getStudentByEmail(email: String!): Student
+      students: [Student]
+      student(id: String!): Student
     }
 
     type Mutation {
       createStudent(input: StudentInput!): Student
-      updateStudentById(id: String!, input: StudentUpdate!): Student
+      updateStudent(id: String!, input: StudentUpdate!): Student
       updatePassword(id: String!, password: String!): Student
     }
 
@@ -21,6 +20,8 @@ const studentTypes = `
       usuario: String
       contrasena: String
       activo: String
+      message: String
+      wasSuccessful: Boolean
     }
 
     input StudentInput {
@@ -36,15 +37,14 @@ const studentTypes = `
     }
 
     input StudentUpdate {
-      id: String!
-      nombre: String!
-      carrera: String!
-      celular: String!
-      idProyecto: String!
-      email: String!
-      usuario: String!
+      nombre: String
+      carrera: String
+      celular: String
+      idProyecto: String
+      email: String
+      usuario: String
       contrasena: String
-      activo: Boolean!
+      activo: Boolean
     }
 `;
 

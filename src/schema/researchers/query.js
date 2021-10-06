@@ -1,14 +1,11 @@
 const Researcher = require('../../models/researchers.model');
 
 const researcherQueries = {
-  async getResearchers() {
+  async researchers() {
     return Researcher.find();
   },
-  async getResearcherById(_, { id }) {
+  async researcher(_, { id }) {
     return Researcher.findOne({ id });
-  },
-  async getResearcherByEmail(_, { email }) {
-    return Researcher.findOne({ email });
   },
 };
 

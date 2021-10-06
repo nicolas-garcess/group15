@@ -52,7 +52,7 @@ const ProjectSchema = new Schema({
     required: true,
   },
   notas: {
-    type: Schema.Types.Mixed,
+    type: [Schema.Types.Mixed],
     required: true,
   },
 });
