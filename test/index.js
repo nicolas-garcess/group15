@@ -136,11 +136,20 @@ const project = new Project({
       activo: true,
     },
   ],
-  notas: {
-    nota001: 'lorem ipsum',
-    nota002: 'lorem ipsum',
-    nota003: 'lorem ipsum',
-  },
+  notas: [
+    {
+      idNota: 'nota001',
+      descripcion: 'lorem ipsum',
+    },
+    {
+      idNota: 'nota002',
+      descripcion: 'lorem ipsum',
+    },
+    {
+      idNota: 'nota003',
+      descripcion: 'lorem ipsum',
+    },
+  ],
 });
 
 describe('Projects schema validation', () => {
