@@ -20,6 +20,8 @@ const studentTypes = `
       usuario: String
       contrasena: String
       activo: String
+      message: String
+      wasSuccessful: Boolean
     }
 
     input StudentInput {
