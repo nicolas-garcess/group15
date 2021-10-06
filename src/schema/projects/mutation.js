@@ -5,7 +5,7 @@ const projectMutations = {
     const projectToCreate = new Project(input);
     return projectToCreate.save();
   },
-  async updateProjectById(_, { idProyecto, input }) {
+  async updateProject(_, { idProyecto, input }) {
     return Project.findOneAndUpdate({ idProyecto }, input, { new: true });
   },
 };

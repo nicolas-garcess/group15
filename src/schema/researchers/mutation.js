@@ -5,7 +5,7 @@ const researcherMutations = {
     const researcherToCreate = new Researcher(input);
     return researcherToCreate.save();
   },
-  async updateResearcherById(_, { id, input }) {
+  async updateResearcher(_, { id, input }) {
     return Researcher.findOneAndUpdate({ id }, input, { new: true });
   },
   async updateResearcherPassword(_, { id, password }) {

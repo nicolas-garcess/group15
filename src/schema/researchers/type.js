@@ -1,13 +1,12 @@
 const researcherTypes = `
     type Query {
-      getResearchers: [Researcher]
-      getResearcherById(id: String!): Researcher
-      getResearcherByEmail(email: String!): Researcher
+      researchers: [Researcher]
+      researcher(id: String!): Researcher
     }
 
     type Mutation {
       createResearcher(input: ResearcherInput!): Researcher
-      updateResearcherById(id: String!, input: ResearcherUpdate!): Researcher
+      updateResearcher(id: String!, input: ResearcherUpdate!): Researcher
       updateResearcherPassword(id: String!, password: String!): Researcher
     }
 

@@ -2,13 +2,13 @@ const researcherTypes = `
     scalar DateTime
 
     type Query {
-      getProjects: [Project]
-      getProjectById(idProyecto: String!): Project
+      projects: [Project]
+      project(idProyecto: String!): Project
     }
 
     type Mutation {
       createProject(input: ProjectInput!): Project
-      updateProjectById(idProyecto: String!, input: ProjectUpdate!): Project
+      updateProject(idProyecto: String!, input: ProjectUpdate!): Project
     }
 
     type Project {

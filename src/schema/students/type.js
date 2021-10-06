@@ -1,13 +1,12 @@
 const studentTypes = `
     type Query {
-      getStudents: [Student]
-      getStudentById(id: String!): Student
-      getStudentByEmail(email: String!): Student
+      students: [Student]
+      student(id: String!): Student
     }
 
     type Mutation {
       createStudent(input: StudentInput!): Student
-      updateStudentById(id: String!, input: StudentUpdate!): Student
+      updateStudent(id: String!, input: StudentUpdate!): Student
       updatePassword(id: String!, password: String!): Student
     }
 

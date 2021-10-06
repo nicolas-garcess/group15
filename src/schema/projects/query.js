@@ -1,10 +1,10 @@
 const Project = require('../../models/projects.model');
 
 const projectQueries = {
-  async getProjects() {
+  async projects() {
     return Project.find();
   },
-  async getProjectById(_, { idProyecto }) {
+  async project(_, { idProyecto }) {
     return Project.findOne({ idProyecto });
   },
 };
