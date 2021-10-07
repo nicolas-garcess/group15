@@ -20,6 +20,10 @@ const studentMutations = {
     return { message: 'The student already exists', wasSuccessful: false };
   },
   async updateStudent(_, { id, input }) {
+    // const studentById = await getStudentById(id);
+
+    // if (input?.idProyecto !== studentById.idProyecto) {
+    // }
     return Student.findOneAndUpdate({ id }, input, { new: true });
   },
   async updatePassword(_, { id, password }) {
