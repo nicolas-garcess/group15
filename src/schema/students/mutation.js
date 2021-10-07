@@ -1,5 +1,10 @@
 const Student = require('../../models/students.model');
-const { addStudentToProject } = require('../projects/data');
+const {
+  addStudentToProject,
+  disableStudentFromProject,
+  findStudentInAProject,
+  updateStudentStatusInAProject,
+} = require('../projects/data');
 const { getStudentByEmail, getStudentById } = require('./data');
 
 const studentMutations = {
@@ -20,11 +25,27 @@ const studentMutations = {
     return { message: 'The student already exists', wasSuccessful: false };
   },
   async updateStudent(_, { id, input }) {
-    // const studentById = await getStudentById(id);
+    const studentById = await getStudentById(id);
+    let response = {};
 
-    // if (input?.idProyecto !== studentById.idProyecto) {
-    // }
-    return Student.findOneAndUpdate({ id }, input, { new: true });
+    if (studentById !== null) {
+      if (input.idProyecto && input.idProyecto !== studentById.idProyecto) {
+        response = await disableStudentFromProject(id, studentById.idProyecto);
+
+        const studentRegisteredInAProject = await findStudentInAProject(input.idProyecto, id);
+        response = studentRegisteredInAProject !== null
+          ? await updateStudentStatusInAProject(input.idProyecto, id, false)
+          : await addStudentToProject(id, input.idProyecto);
+      }
+
+      const updatedStudent = await Student.findOneAndUpdate({ id }, input, { new: true });
+
+      return {
+        ...updatedStudent, message: 'Student updated', wasSuccessful: true, ...response,
+      };
+    }
+
+    return { message: 'Student Id does not exist', wasSuccessful: false };
   },
   async updatePassword(_, { id, password }) {
     return Student.findOneAndUpdate({ id }, { contrasena: password }, { new: true });
