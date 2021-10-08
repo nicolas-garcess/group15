@@ -20,6 +20,18 @@ const projectMutations = {
       { new: true },
     );
   },
+  async updateResearcherStatusInAProject(_, { idProyecto, input }) {
+    return Project.findOneAndUpdate(
+      {
+        $and: [
+          { idProyecto },
+          { 'investigadores.idInvestigador': input.idInvestigador },
+        ],
+      },
+      { $set: { 'investigadores.$.activo': input.activo } },
+      { new: true },
+    );
+  },
 };
 
 module.exports = projectMutations;

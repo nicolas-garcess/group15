@@ -17,6 +17,7 @@ const studentMutations = {
         addStudentToProject(input.id, input.idProyecto);
         const studentToCreate = new Student(input);
         const response = await studentToCreate.save();
+
         return { ...response, message: 'Student created', wasSuccessful: true };
       }
       return { message: 'The student ID already exists', wasSuccessful: false };
@@ -41,7 +42,7 @@ const studentMutations = {
       const updatedStudent = await Student.findOneAndUpdate({ id }, input, { new: true });
 
       return {
-        ...updatedStudent, message: 'Student updated', wasSuccessful: true, ...response,
+        id: updatedStudent.id, message: 'Student updated', wasSuccessful: true, ...response,
       };
     }
 
