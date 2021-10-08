@@ -35,12 +35,10 @@ const researcherTypes = `
     }
 
     input ResearcherUpdate {
-      id: String
       nombre: String
       idProyecto: String
       email: String
       usuario: String
-      contrasena: String
       horasDedicacion: Int
       activo: Boolean
     }

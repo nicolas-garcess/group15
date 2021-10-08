@@ -5,13 +5,10 @@ const {
   findResearcherInAProject,
   updateResearcherStatusInAProject,
 } = require('../projects/data');
-const { getResearcherByEmail, getResearcherById } = require('./data');
+const { getResearcherByEmail, getResearcherById, parseResearcher } = require('./data');
+const { parseResponse } = require('../students/data');
 
 const researcherMutations = {
-  // async createResearcher(_, { input }) {
-  //   const researcherToCreate = new Researcher(input);
-  //   return researcherToCreate.save();
-  // },
   async createResearcher(_, { input }) {
     const researcherByEmail = await getResearcherByEmail(input.email);
     const researcherById = await getResearcherById(input.id);
@@ -20,9 +17,9 @@ const researcherMutations = {
       if (researcherById === null) {
         addResearcherToProject(input.id, input.idProyecto);
         const researcherToCreate = new Researcher(input);
-        const response = await researcherToCreate.save();
+        const researcherCreated = await researcherToCreate.save();
 
-        return { ...response, message: 'Researcher created', wasSuccessful: true };
+        return { ...parseResearcher(researcherCreated), message: 'Researcher created', wasSuccessful: true };
       }
       return { message: 'The researcher ID already exists', wasSuccessful: false };
     }
@@ -31,7 +28,7 @@ const researcherMutations = {
   },
   async updateResearcher(_, { id, input }) {
     const researcherById = await getResearcherById(id);
-    let response = {};
+    let response = null;
 
     if (researcherById !== null) {
       if (input.idProyecto && input.idProyecto !== researcherById.idProyecto) {
@@ -46,15 +43,12 @@ const researcherMutations = {
       const updatedResearcher = await Researcher.findOneAndUpdate({ id }, input, { new: true });
 
       return {
-        id: updatedResearcher.id, message: 'Researcher updated', wasSuccessful: true, ...response,
+        ...parseResearcher(updatedResearcher), message: 'Researcher updated', wasSuccessful: true, ...parseResponse(response),
       };
     }
 
     return { message: 'Researcher Id does not exist', wasSuccessful: false };
   },
-  // async updateResearcher(_, { id, input }) {
-  //   return Researcher.findOneAndUpdate({ id }, input, { new: true });
-  // },
   async updateResearcherPassword(_, { id, password }) {
     return Researcher.findOneAndUpdate({ id }, { contrasena: password }, { new: true });
   },

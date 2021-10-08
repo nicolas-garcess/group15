@@ -5,7 +5,9 @@ const {
   findStudentInAProject,
   updateStudentStatusInAProject,
 } = require('../projects/data');
-const { getStudentByEmail, getStudentById } = require('./data');
+const {
+  getStudentByEmail, getStudentById, parseStudent, parseResponse,
+} = require('./data');
 
 const studentMutations = {
   async createStudent(_, { input }) {
@@ -16,9 +18,9 @@ const studentMutations = {
       if (studentById === null) {
         addStudentToProject(input.id, input.idProyecto);
         const studentToCreate = new Student(input);
-        const response = await studentToCreate.save();
+        const studentCreated = await studentToCreate.save();
 
-        return { ...response, message: 'Student created', wasSuccessful: true };
+        return { ...parseStudent(studentCreated), message: 'Student created', wasSuccessful: true };
       }
       return { message: 'The student ID already exists', wasSuccessful: false };
     }
@@ -27,7 +29,7 @@ const studentMutations = {
   },
   async updateStudent(_, { id, input }) {
     const studentById = await getStudentById(id);
-    let response = {};
+    let response = null;
 
     if (studentById !== null) {
       if (input.idProyecto && input.idProyecto !== studentById.idProyecto) {
@@ -42,7 +44,7 @@ const studentMutations = {
       const updatedStudent = await Student.findOneAndUpdate({ id }, input, { new: true });
 
       return {
-        id: updatedStudent.id, message: 'Student updated', wasSuccessful: true, ...response,
+        ...parseStudent(updatedStudent), message: 'Student updated', wasSuccessful: true, ...parseResponse(response),
       };
     }
 
