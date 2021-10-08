@@ -43,7 +43,6 @@ const studentTypes = `
       idProyecto: String
       email: String
       usuario: String
-      contrasena: String
       activo: Boolean
     }
 `;

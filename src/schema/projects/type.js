@@ -9,6 +9,8 @@ const researcherTypes = `
     type Mutation {
       createProject(input: ProjectInput!): Project
       updateProject(idProyecto: String!, input: ProjectUpdate!): Project
+      updateStudentStatusInAProject(idProyecto: String!, input: ProjectStudentUpdate!): Project
+      updateResearcherStatusInAProject(idProyecto: String!, input: ProjectResearcherUpdate!): Project
     }
 
     type Project {
@@ -50,7 +52,6 @@ const researcherTypes = `
       estaDisponible: Boolean
       avance: Float
       fase: String
-      estudiantes: [ProjectStudentUpdate]
       investigadores: [ProjectResearcherUpdate]
       notas: [NoteUpdate]
     }
