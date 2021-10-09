@@ -39,7 +39,6 @@ const projectQueries = {
       ]);
 
       const parsedProject = assignResearchersAndStudentsDataToProjects(project)[0];
-      console.log(parsedProject);
 
       return {
         ...parsedProject,

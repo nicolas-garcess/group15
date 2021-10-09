@@ -87,24 +87,24 @@ const researcherTypes = `
 
     type ProjectStudent {
       idEstudiante: String
-      activo: Boolean
+      activoEnElProyecto: Boolean
     }
 
     type ProjectResearcherResponse {
       idInvestigador: String
       infoInvestigador: Researcher
-      activo: Boolean
+      activoEnElProyecto: Boolean
     }
 
     type ProjectResearcher {
       idInvestigador: String
-      activo: Boolean
+      activoEnElProyecto: Boolean
     }
 
     type ProjectStudentResponse {
       idEstudiante: String
       infoEstudiante: Student
-      activo: Boolean
+      activoEnElProyecto: Boolean
     }
 
     type Note {
@@ -125,12 +125,12 @@ const researcherTypes = `
 
     input ProjectStudentInput {
       idEstudiante: String
-      activo: Boolean
+      activoEnElProyecto: Boolean
     }
 
     input ProjectResearcherInput {
       idInvestigador: String
-      activo: Boolean
+      activoEnElProyecto: Boolean
     }
 
     input NoteInput {
@@ -151,12 +151,12 @@ const researcherTypes = `
 
     input ProjectStudentUpdate {
       idEstudiante: String
-      activo: Boolean
+      activoEnElProyecto: Boolean
     }
 
     input ProjectResearcherUpdate {
       idInvestigador: String
-      activo: Boolean
+      activoEnElProyecto: Boolean
     }
 
     input NoteUpdate {

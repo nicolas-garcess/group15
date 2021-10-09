@@ -12,7 +12,7 @@ const updateStudentStatusInAProject = async (projectId, studentId, status) => {
         { 'estudiantes.idEstudiante': studentId },
       ],
     },
-    { $set: { 'estudiantes.$.activo': !status } },
+    { $set: { 'estudiantes.$.activoEnElProyecto': !status } },
     { new: true },
   );
 
@@ -30,7 +30,7 @@ const updateResearcherStatusInAProject = async (projectId, researcherId, status)
         { 'investigadores.idInvestigador': researcherId },
       ],
     },
-    { $set: { 'investigadores.$.activo': !status } },
+    { $set: { 'investigadores.$.activoEnElProyecto': !status } },
     { new: true },
   );
 
@@ -110,7 +110,7 @@ const addStudentToProject = async (studentId, projectId) => {
           ...students,
           {
             idEstudiante: studentId,
-            activo: true,
+            activoEnElProyecto: true,
           },
         ],
       },
@@ -140,7 +140,7 @@ const addResearcherToProject = async (researcherId, projectId) => {
           ...researchers,
           {
             idInvestigador: researcherId,
-            activo: true,
+            activoEnElProyecto: true,
           },
         ],
       },

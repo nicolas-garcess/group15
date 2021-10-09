@@ -123,17 +123,17 @@ const project = new Project({
   estudiantes: [
     {
       idEstudiante: 'estudiante001',
-      activo: true,
+      activoEnElProyecto: true,
     },
     {
       idEstudiante: 'estudiante002',
-      activo: true,
+      activoEnElProyecto: true,
     },
   ],
   investigadores: [
     {
       idInvestigador: 'investigador001',
-      activo: true,
+      activoEnElProyecto: true,
     },
   ],
   notas: [
