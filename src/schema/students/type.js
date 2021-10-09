@@ -19,7 +19,6 @@ const studentTypes = `
       idProyecto: String
       email: String
       usuario: String
-      contrasena: String
       activo: String
       message: String
       wasSuccessful: Boolean

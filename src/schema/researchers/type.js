@@ -17,7 +17,6 @@ const researcherTypes = `
       idProyecto: String
       email: String
       usuario: String
-      contrasena: String
       horasDedicacion: Int
       activo: Boolean
       message: String

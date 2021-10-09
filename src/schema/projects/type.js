@@ -2,8 +2,8 @@ const researcherTypes = `
     scalar DateTime
 
     type Query {
-      projects: [Project]
-      project(idProyecto: String!): Project
+      projects: [ProjectResponse]
+      project(idProyecto: String!): ProjectResponse
     }
 
     type Mutation {
@@ -27,11 +27,28 @@ const researcherTypes = `
       estudiantes: [ProjectStudent]
       investigadores: [ProjectResearcher]
       notas: [Note]
+      response: Response
     }
 
     type Response {
       message: String
       wasSuccessful: Boolean
+    }
+
+    type ProjectResponse {
+      idProyecto: String
+      objetivos: Objectives
+      presupuesto: Float
+      fechaInicial: DateTime
+      fechaFinal: DateTime
+      directorProyecto: String
+      estaDisponible: Boolean
+      avance: Float
+      fase: String
+      estudiantes: [ProjectStudentResponse]
+      investigadores: [ProjectResearcherResponse]
+      notas: [Note]
+      response: Response
     }
 
     input ProjectInput {
@@ -73,8 +90,20 @@ const researcherTypes = `
       activo: Boolean
     }
 
+    type ProjectResearcherResponse {
+      idInvestigador: String
+      infoInvestigador: Researcher
+      activo: Boolean
+    }
+
     type ProjectResearcher {
       idInvestigador: String
+      activo: Boolean
+    }
+
+    type ProjectStudentResponse {
+      idEstudiante: String
+      infoEstudiante: Student
       activo: Boolean
     }
 
