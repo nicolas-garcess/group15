@@ -1,4 +1,6 @@
 const Project = require('../../models/projects.model');
+const { getStudentById, updateStudentById } = require('../students/data');
+const { getResearcherById, updateResearcherById } = require('../researchers/data');
 
 const getProjectById = async (projectId) => Project.findOne({ idProyecto: projectId });
 
@@ -156,6 +158,55 @@ const addResearcherToProject = async (researcherId, projectId) => {
   };
 };
 
+const defineProjectPhase = (progress) => {
+  let phase = 'Inicio';
+  if (progress === 100) {
+    phase = 'Terminado';
+  } else if (progress > 0) {
+    phase = 'Desarrollo';
+  }
+  return phase;
+};
+
+const calculateProjectProgress = (projectData, projectId) => {
+  const specificObjectives = projectData?.objetivos?.objetivosEspecificos;
+  let avance = 0;
+
+  if (specificObjectives?.length) {
+    const specificObjectivesDone = specificObjectives.filter((objective) => objective.cumplido);
+    avance = Math.floor((specificObjectivesDone.length / specificObjectives.length) * 100);
+  } else {
+    avance = getProjectById(projectId).avance;
+  }
+
+  return {
+    avance,
+    fase: defineProjectPhase(avance),
+  };
+};
+
+const disableStudentsOfAProject = (students, projectId) => {
+  students.forEach(async (student) => {
+    const studentById = await getStudentById(student.idEstudiante);
+
+    if (studentById !== null) {
+      await disableStudentFromProject(student.idEstudiante, studentById.idProyecto);
+      await updateStudentById(student.idEstudiante, projectId);
+    }
+  });
+};
+
+const disableResearchersOfAProject = (researchers, projectId) => {
+  researchers.forEach(async (researcher) => {
+    const researcherById = await getResearcherById(researcher.idInvestigador);
+
+    if (researcherById !== null) {
+      await disableResearcherFromProject(researcher.idInvestigador, researcherById.idProyecto);
+      await updateResearcherById(researcher.idInvestigador, projectId);
+    }
+  });
+};
+
 module.exports = {
   addStudentToProject,
   addResearcherToProject,
@@ -165,4 +216,7 @@ module.exports = {
   findResearcherInAProject,
   updateStudentStatusInAProject,
   updateResearcherStatusInAProject,
+  calculateProjectProgress,
+  disableStudentsOfAProject,
+  disableResearchersOfAProject,
 };
