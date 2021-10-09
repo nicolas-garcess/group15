@@ -52,6 +52,27 @@ const researcherMutations = {
   async updateResearcherPassword(_, { id, password }) {
     return Researcher.findOneAndUpdate({ id }, { contrasena: password }, { new: true });
   },
+  async deleteResearcherById(_, { id }) {
+    try {
+      const deletedResearcher = await Researcher.findOneAndDelete({ id });
+
+      if (deletedResearcher !== null) {
+        return {
+          message: `The researcher ${id} was deleted`,
+          wasSuccessful: true,
+        };
+      }
+      return {
+        message: `The researcher ${id} does not exist`,
+        wasSuccessful: false,
+      };
+    } catch (error) {
+      return {
+        message: 'Something went wrong',
+        wasSuccessful: false,
+      };
+    }
+  },
 };
 
 module.exports = researcherMutations;
