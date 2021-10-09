@@ -53,6 +53,27 @@ const studentMutations = {
   async updatePassword(_, { id, password }) {
     return Student.findOneAndUpdate({ id }, { contrasena: password }, { new: true });
   },
+  async deleteStudentById(_, { id }) {
+    try {
+      const deletedStudent = await Student.findOneAndDelete({ id });
+
+      if (deletedStudent !== null) {
+        return {
+          message: `The student ${id} was deleted`,
+          wasSuccessful: true,
+        };
+      }
+      return {
+        message: `The student ${id} does not exist`,
+        wasSuccessful: false,
+      };
+    } catch (error) {
+      return {
+        message: 'Something went wrong',
+        wasSuccessful: false,
+      };
+    }
+  },
 };
 
 module.exports = studentMutations;
