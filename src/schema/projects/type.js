@@ -2,8 +2,8 @@ const researcherTypes = `
     scalar DateTime
 
     type Query {
-      projects: [Project]
-      project(idProyecto: String!): Project
+      projects: [ProjectResponse]
+      project(idProyecto: String!): ProjectResponse
     }
 
     type Mutation {
@@ -11,6 +11,7 @@ const researcherTypes = `
       updateProject(idProyecto: String!, input: ProjectUpdate!): Project
       updateStudentStatusInAProject(idProyecto: String!, input: ProjectStudentUpdate!): Project
       updateResearcherStatusInAProject(idProyecto: String!, input: ProjectResearcherUpdate!): Project
+      deleteProjectById(idProyecto: String!): Response
     }
 
     type Project {
@@ -26,6 +27,28 @@ const researcherTypes = `
       estudiantes: [ProjectStudent]
       investigadores: [ProjectResearcher]
       notas: [Note]
+      response: Response
+    }
+
+    type Response {
+      message: String
+      wasSuccessful: Boolean
+    }
+
+    type ProjectResponse {
+      idProyecto: String
+      objetivos: Objectives
+      presupuesto: Float
+      fechaInicial: DateTime
+      fechaFinal: DateTime
+      directorProyecto: String
+      estaDisponible: Boolean
+      avance: Float
+      fase: String
+      estudiantes: [ProjectStudentResponse]
+      investigadores: [ProjectResearcherResponse]
+      notas: [Note]
+      response: Response
     }
 
     input ProjectInput {
@@ -64,12 +87,24 @@ const researcherTypes = `
 
     type ProjectStudent {
       idEstudiante: String
-      activo: Boolean
+      activoEnElProyecto: Boolean
+    }
+
+    type ProjectResearcherResponse {
+      idInvestigador: String
+      infoInvestigador: Researcher
+      activoEnElProyecto: Boolean
     }
 
     type ProjectResearcher {
       idInvestigador: String
-      activo: Boolean
+      activoEnElProyecto: Boolean
+    }
+
+    type ProjectStudentResponse {
+      idEstudiante: String
+      infoEstudiante: Student
+      activoEnElProyecto: Boolean
     }
 
     type Note {
@@ -90,12 +125,12 @@ const researcherTypes = `
 
     input ProjectStudentInput {
       idEstudiante: String
-      activo: Boolean
+      activoEnElProyecto: Boolean
     }
 
     input ProjectResearcherInput {
       idInvestigador: String
-      activo: Boolean
+      activoEnElProyecto: Boolean
     }
 
     input NoteInput {
@@ -116,12 +151,12 @@ const researcherTypes = `
 
     input ProjectStudentUpdate {
       idEstudiante: String
-      activo: Boolean
+      activoEnElProyecto: Boolean
     }
 
     input ProjectResearcherUpdate {
       idInvestigador: String
-      activo: Boolean
+      activoEnElProyecto: Boolean
     }
 
     input NoteUpdate {

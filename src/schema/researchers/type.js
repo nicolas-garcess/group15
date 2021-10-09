@@ -8,6 +8,7 @@ const researcherTypes = `
       createResearcher(input: ResearcherInput!): Researcher
       updateResearcher(id: String!, input: ResearcherUpdate!): Researcher
       updateResearcherPassword(id: String!, password: String!): Researcher
+      deleteResearcherById(id: String!): Response
     }
 
     type Researcher {
@@ -16,7 +17,6 @@ const researcherTypes = `
       idProyecto: String
       email: String
       usuario: String
-      contrasena: String
       horasDedicacion: Int
       activo: Boolean
       message: String

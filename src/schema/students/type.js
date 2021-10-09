@@ -8,6 +8,7 @@ const studentTypes = `
       createStudent(input: StudentInput!): Student
       updateStudent(id: String!, input: StudentUpdate!): Student
       updatePassword(id: String!, password: String!): Student
+      deleteStudentById(id: String!): Response
     }
 
     type Student {
@@ -18,7 +19,6 @@ const studentTypes = `
       idProyecto: String
       email: String
       usuario: String
-      contrasena: String
       activo: String
       message: String
       wasSuccessful: Boolean

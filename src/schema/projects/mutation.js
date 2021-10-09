@@ -26,7 +26,7 @@ const projectMutations = {
           { 'estudiantes.idEstudiante': input.idEstudiante },
         ],
       },
-      { $set: { 'estudiantes.$.activo': input.activo } },
+      { $set: { 'estudiantes.$.activoEnElProyecto': input.activoEnElProyecto } },
       { new: true },
     );
   },
@@ -38,9 +38,30 @@ const projectMutations = {
           { 'investigadores.idInvestigador': input.idInvestigador },
         ],
       },
-      { $set: { 'investigadores.$.activo': input.activo } },
+      { $set: { 'investigadores.$.activoEnElProyecto': input.activoEnElProyecto } },
       { new: true },
     );
+  },
+  async deleteProjectById(_, { idProyecto }) {
+    try {
+      const deletedProject = await Project.findOneAndDelete({ idProyecto });
+
+      if (deletedProject !== null) {
+        return {
+          message: `The project ${idProyecto} was deleted`,
+          wasSuccessful: true,
+        };
+      }
+      return {
+        message: `The project ${idProyecto} does not exist`,
+        wasSuccessful: false,
+      };
+    } catch (error) {
+      return {
+        message: 'Something went wrong',
+        wasSuccessful: false,
+      };
+    }
   },
 };
 

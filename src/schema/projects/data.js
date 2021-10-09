@@ -12,7 +12,7 @@ const updateStudentStatusInAProject = async (projectId, studentId, status) => {
         { 'estudiantes.idEstudiante': studentId },
       ],
     },
-    { $set: { 'estudiantes.$.activo': !status } },
+    { $set: { 'estudiantes.$.activoEnElProyecto': !status } },
     { new: true },
   );
 
@@ -30,7 +30,7 @@ const updateResearcherStatusInAProject = async (projectId, researcherId, status)
         { 'investigadores.idInvestigador': researcherId },
       ],
     },
-    { $set: { 'investigadores.$.activo': !status } },
+    { $set: { 'investigadores.$.activoEnElProyecto': !status } },
     { new: true },
   );
 
@@ -110,7 +110,7 @@ const addStudentToProject = async (studentId, projectId) => {
           ...students,
           {
             idEstudiante: studentId,
-            activo: true,
+            activoEnElProyecto: true,
           },
         ],
       },
@@ -140,7 +140,7 @@ const addResearcherToProject = async (researcherId, projectId) => {
           ...researchers,
           {
             idInvestigador: researcherId,
-            activo: true,
+            activoEnElProyecto: true,
           },
         ],
       },
@@ -207,6 +207,71 @@ const disableResearchersOfAProject = (researchers, projectId) => {
   });
 };
 
+const linkStudentsDataToProject = (project) => {
+  const students = [];
+  project.estudiantes.forEach((student) => {
+    project.studentsResponse.forEach((studentData) => {
+      if (student.idEstudiante === studentData.id) {
+        students.push({
+          ...student,
+          infoEstudiante: studentData,
+        });
+      }
+    });
+  });
+
+  return students;
+};
+
+const linkResearchersDataToProject = (project) => {
+  const researchers = [];
+  project.investigadores.forEach((researcher) => {
+    project.researchersResponse.forEach((researcherData) => {
+      if (researcher.idInvestigador === researcherData.id) {
+        researchers.push({
+          ...researcher,
+          infoInvestigador: researcherData,
+        });
+      }
+    });
+  });
+
+  return researchers;
+};
+
+const assignResearchersAndStudentsDataToProjects = (input) => {
+  let response = null;
+  let project = {};
+
+  if (Array.isArray(input)) {
+    response = [];
+    input.forEach((projectData) => {
+      project = { ...projectData };
+
+      const studentsPerProject = linkStudentsDataToProject(projectData);
+      const researchersPerProject = linkResearchersDataToProject(projectData);
+
+      project.estudiantes = studentsPerProject;
+      project.investigadores = researchersPerProject;
+      response.push(project);
+    });
+  } else {
+    input.forEach((projectData) => {
+      project = { ...projectData };
+
+      const studentsPerProject = linkStudentsDataToProject(projectData);
+      const researchersPerProject = linkResearchersDataToProject(projectData);
+
+      project.estudiantes = studentsPerProject;
+      project.investigadores = researchersPerProject;
+
+      response = project;
+    });
+  }
+
+  return response;
+};
+
 module.exports = {
   addStudentToProject,
   addResearcherToProject,
@@ -219,4 +284,5 @@ module.exports = {
   calculateProjectProgress,
   disableStudentsOfAProject,
   disableResearchersOfAProject,
+  assignResearchersAndStudentsDataToProjects,
 };

@@ -58,6 +58,6 @@ const ProjectSchema = new Schema({
 });
 
 // Modelo de datos, recibe el nombre de la colección de la base de datos y el esquema
-const ProjectModel = mongoose.model('projects', ProjectSchema);
+const ProjectModel = mongoose.model('proyectos', ProjectSchema);
 
 module.exports = ProjectModel;
