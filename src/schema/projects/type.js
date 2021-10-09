@@ -11,6 +11,7 @@ const researcherTypes = `
       updateProject(idProyecto: String!, input: ProjectUpdate!): Project
       updateStudentStatusInAProject(idProyecto: String!, input: ProjectStudentUpdate!): Project
       updateResearcherStatusInAProject(idProyecto: String!, input: ProjectResearcherUpdate!): Project
+      deleteProjectById(idProyecto: String!): Response
     }
 
     type Project {
@@ -26,6 +27,11 @@ const researcherTypes = `
       estudiantes: [ProjectStudent]
       investigadores: [ProjectResearcher]
       notas: [Note]
+    }
+
+    type Response {
+      message: String
+      wasSuccessful: Boolean
     }
 
     input ProjectInput {
