@@ -2,6 +2,9 @@ const Student = require('../../models/students.model');
 
 const getStudentByEmail = async (email) => Student.findOne({ email });
 const getStudentById = async (id) => Student.findOne({ id });
+const updateStudentById = async (id, projectId) => (
+  Student.findOneAndUpdate({ id }, { idProyecto: projectId }, { new: true })
+);
 
 const parseStudent = (student) => ({
   id: student.id,
@@ -29,4 +32,5 @@ module.exports = {
   getStudentById,
   parseStudent,
   parseResponse,
+  updateStudentById,
 };

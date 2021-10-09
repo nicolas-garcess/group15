@@ -36,8 +36,6 @@ const researcherTypes = `
       fechaFinal: DateTime!
       directorProyecto: String!
       estaDisponible: Boolean!
-      avance: Float!
-      fase: String!
       estudiantes: [ProjectStudentInput]!
       investigadores: [ProjectResearcherInput]!
       notas: [NoteInput]!
@@ -50,9 +48,6 @@ const researcherTypes = `
       fechaFinal: DateTime
       directorProyecto: String
       estaDisponible: Boolean
-      avance: Float
-      fase: String
-      investigadores: [ProjectResearcherUpdate]
       notas: [NoteUpdate]
     }
 
