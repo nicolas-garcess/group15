@@ -273,6 +273,7 @@ const assignResearchersAndStudentsDataToProjects = (input) => {
 };
 
 module.exports = {
+  getProjectById,
   addStudentToProject,
   addResearcherToProject,
   disableStudentFromProject,

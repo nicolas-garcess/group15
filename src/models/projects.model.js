@@ -9,6 +9,10 @@ const ProjectSchema = new Schema({
     minLength: 3,
     maxLength: 15,
   },
+  descripcion: {
+    type: String,
+    required: true,
+  },
   objetivos: {
     type: Schema.Types.Mixed,
     required: true,

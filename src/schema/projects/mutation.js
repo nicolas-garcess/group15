@@ -1,16 +1,36 @@
+const { GraphQLError } = require('graphql');
 const Project = require('../../models/projects.model');
-const { calculateProjectProgress, disableStudentsOfAProject, disableResearchersOfAProject } = require('./data');
+const {
+  getProjectById, calculateProjectProgress, disableStudentsOfAProject, disableResearchersOfAProject,
+} = require('./data');
+const { schemaCreateProject } = require('../validations');
 
 const projectMutations = {
   async createProject(_, { input }) {
-    await disableStudentsOfAProject(input.estudiantes, input.idProyecto);
-    await disableResearchersOfAProject(input.investigadores, input.idProyecto);
+    const { error } = schemaCreateProject.validate(input, { abortEarly: false });
 
-    const projectProgress = calculateProjectProgress(input, input.idProyecto);
-    const queryData = { ...input, ...projectProgress };
+    if (error) {
+      throw new GraphQLError({
+        error: `${error}`,
+        wasSuccessful: false,
+      });
+    }
 
-    const projectToCreate = new Project(queryData);
-    return projectToCreate.save();
+    if (getProjectById(input.idProyecto) === null) {
+      await disableStudentsOfAProject(input.estudiantes, input.idProyecto);
+      await disableResearchersOfAProject(input.investigadores, input.idProyecto);
+
+      const projectProgress = calculateProjectProgress(input, input.idProyecto);
+      const queryData = { ...input, ...projectProgress };
+
+      const projectToCreate = new Project(queryData);
+      return projectToCreate.save();
+    }
+
+    return new GraphQLError({
+      error: `The project Id ${input.idProyecto} already exists`,
+      wasSuccessful: false,
+    });
   },
   async updateProject(_, { idProyecto, input }) {
     const projectProgress = calculateProjectProgress(input, idProyecto);
