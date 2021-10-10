@@ -64,6 +64,7 @@ const projectMutations = {
       wasSuccessful: false,
     });
   },
+  // TODO verify if necessary get the project before the update
   async updateStudentStatusInAProject(_, { idProyecto, input }) {
     const { error } = schemaUpdateStudentInAProject.validate(
       { idProyecto, ...input },

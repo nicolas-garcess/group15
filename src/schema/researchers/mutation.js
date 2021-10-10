@@ -9,7 +9,7 @@ const {
 } = require('../projects/data');
 const { getResearcherByEmail, getResearcherById, parseResearcher } = require('./data');
 const { parseResponse } = require('../students/data');
-const { schemaCreateResearcher, schemaUpdateResearcher } = require('../validations');
+const { schemaCreateResearcher, schemaUpdateResearcher, schemaUserId } = require('../validations');
 
 const researcherMutations = {
   async createResearcher(_, { input }) {
@@ -124,6 +124,18 @@ const researcherMutations = {
     return Researcher.findOneAndUpdate({ id }, { contrasena: password }, { new: true });
   },
   async deleteResearcherById(_, { id }) {
+    const { error } = schemaUserId.validate(
+      { id },
+      { abortEarly: false },
+    );
+
+    if (error) {
+      throw new GraphQLError({
+        error: `${error}`,
+        wasSuccessful: false,
+      });
+    }
+
     try {
       const deletedResearcher = await Researcher.findOneAndDelete({ id });
 
@@ -137,7 +149,7 @@ const researcherMutations = {
         message: `The researcher ${id} does not exist`,
         wasSuccessful: false,
       };
-    } catch (error) {
+    } catch (err) {
       return {
         message: 'Something went wrong',
         wasSuccessful: false,

@@ -96,6 +96,10 @@ const schemaUpdateStudent = Joi.object({
   activo: Joi.boolean(),
 });
 
+const schemaUserId = Joi.object({
+  id: Joi.string().min(3).max(15).required(),
+});
+
 module.exports = {
   schemaCreateProject,
   schemaProjectId,
@@ -106,4 +110,5 @@ module.exports = {
   schemaCreateStudent,
   schemaUpdateStudent,
   schemaUpdateStudentInAProject,
+  schemaUserId,
 };
