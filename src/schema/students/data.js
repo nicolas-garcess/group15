@@ -14,6 +14,7 @@ const parseStudent = (student) => ({
   idProyecto: student.idProyecto,
   email: student.email,
   usuario: student.usuario,
+  fechaIngreso: student.fechaIngreso,
   activo: student.activo,
 });
 

@@ -26,7 +26,7 @@ const researcherTypes = `
     input ResearcherInput {
       id: String!
       nombre: String!
-      idProyecto: String!
+      idProyecto: String
       email: String!
       usuario: String!
       contrasena: String!
@@ -38,7 +38,6 @@ const researcherTypes = `
       nombre: String
       idProyecto: String
       email: String
-      usuario: String
       horasDedicacion: Int
       activo: Boolean
     }

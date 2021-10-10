@@ -1,5 +1,7 @@
+const { GraphQLError } = require('graphql');
 const Project = require('../../models/projects.model');
-const { assignResearchersAndStudentsDataToProjects } = require('./data');
+const { getProjectById, assignResearchersAndStudentsDataToProjects } = require('./data');
+const { schemaProjectId } = require('../validations');
 
 const projectQueries = {
   async projects() {
@@ -23,33 +25,50 @@ const projectQueries = {
     }
   },
   async project(_, { idProyecto }) {
+    const { error } = schemaProjectId.validate(
+      { idProyecto },
+      { abortEarly: false },
+    );
+
+    if (error) {
+      throw new GraphQLError({
+        error: `${error}`,
+        wasSuccessful: false,
+      });
+    }
+
     try {
-      const project = await Project.aggregate([
-        { $match: { idProyecto } },
-        {
-          $lookup: {
-            from: 'estudiantes', localField: 'estudiantes.idEstudiante', foreignField: 'id', as: 'studentsResponse',
-          },
-        },
-        {
-          $lookup: {
-            from: 'investigadores', localField: 'investigadores.idInvestigador', foreignField: 'id', as: 'researchersResponse',
-          },
-        },
-      ]);
+      const project = await getProjectById(idProyecto);
 
-      const parsedProject = assignResearchersAndStudentsDataToProjects(project)[0];
+      if (project !== null) {
+        const response = await Project.aggregate([
+          { $match: { idProyecto } },
+          {
+            $lookup: {
+              from: 'estudiantes', localField: 'estudiantes.idEstudiante', foreignField: 'id', as: 'studentsResponse',
+            },
+          },
+          {
+            $lookup: {
+              from: 'investigadores', localField: 'investigadores.idInvestigador', foreignField: 'id', as: 'researchersResponse',
+            },
+          },
+        ]);
 
-      return {
-        ...parsedProject,
-        message: 'Succesful query',
-        wasSuccesful: true,
-      };
+        const parsedProject = assignResearchersAndStudentsDataToProjects(response)[0];
+
+        return parsedProject;
+      }
+
+      return new GraphQLError({
+        error: `The project Id ${idProyecto} does not exist`,
+        wasSuccessful: false,
+      });
     } catch (err) {
-      return {
-        message: 'Something went wrong',
-        wasSuccesful: false,
-      };
+      return new GraphQLError({
+        error: 'Something went wrong',
+        wasSuccessful: false,
+      });
     }
   },
 };
