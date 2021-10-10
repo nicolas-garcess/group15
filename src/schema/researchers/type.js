@@ -19,8 +19,6 @@ const researcherTypes = `
       usuario: String
       horasDedicacion: Int
       activo: Boolean
-      message: String
-      wasSuccessful: Boolean
     }
 
     input ResearcherInput {

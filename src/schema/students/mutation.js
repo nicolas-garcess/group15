@@ -1,31 +1,62 @@
+const { GraphQLError } = require('graphql');
 const Student = require('../../models/students.model');
 const {
+  getProjectById,
   addStudentToProject,
   disableStudentFromProject,
   findStudentInAProject,
   updateStudentStatusInAProject,
 } = require('../projects/data');
 const {
-  getStudentByEmail, getStudentById, parseStudent, parseResponse,
+  getStudentByEmail, getStudentById, parseResponse,
 } = require('./data');
+const { schemaCreateStudent, schemaUpdateStudent, schemaUserId } = require('../validations');
 
 const studentMutations = {
   async createStudent(_, { input }) {
-    const studentByEmail = await getStudentByEmail(input.email);
-    const studentById = await getStudentById(input.id);
+    const { error } = schemaCreateStudent.validate(
+      input,
+      { abortEarly: false },
+    );
 
-    if (studentByEmail === null) {
-      if (studentById === null) {
-        addStudentToProject(input.id, input.idProyecto);
-        const studentToCreate = new Student(input);
-        const studentCreated = await studentToCreate.save();
-
-        return { ...parseStudent(studentCreated), message: 'Student created', wasSuccessful: true };
-      }
-      return { message: 'The student ID already exists', wasSuccessful: false };
+    if (error) {
+      throw new GraphQLError({
+        error: `${error}`,
+        wasSuccessful: false,
+      });
     }
 
-    return { message: 'The student already exists', wasSuccessful: false };
+    const project = await getProjectById(input.idProyecto);
+
+    if (project !== null) {
+      const studentByEmail = await getStudentByEmail(input.email);
+
+      if (studentByEmail === null) {
+        const studentById = await getStudentById(input.id);
+
+        if (studentById === null) {
+          addStudentToProject(input.id, input.idProyecto);
+          const studentToCreate = new Student(input);
+          const studentCreated = await studentToCreate.save();
+
+          return studentCreated;
+        }
+        return new GraphQLError({
+          error: `The student ID ${input.id} already exists`,
+          wasSuccessful: false,
+        });
+      }
+
+      return new GraphQLError({
+        error: `The email ${input.email} already exists`,
+        wasSuccessful: false,
+      });
+    }
+
+    return new GraphQLError({
+      error: `The project Id ${input.idProyecto} does not exist`,
+      wasSuccessful: false,
+    });
   },
   async updateStudent(_, { id, input }) {
     const studentById = await getStudentById(id);

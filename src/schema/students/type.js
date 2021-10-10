@@ -19,10 +19,8 @@ const studentTypes = `
       idProyecto: String
       email: String
       usuario: String
-      horasDedicacion: DateTime
+      fechaIngreso: DateTime
       activo: String
-      message: String
-      wasSuccessful: Boolean
     }
 
     input StudentInput {

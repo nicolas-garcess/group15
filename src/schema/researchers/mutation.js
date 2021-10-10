@@ -7,7 +7,7 @@ const {
   findResearcherInAProject,
   updateResearcherStatusInAProject,
 } = require('../projects/data');
-const { getResearcherByEmail, getResearcherById, parseResearcher } = require('./data');
+const { getResearcherByEmail, getResearcherById } = require('./data');
 const { parseResponse } = require('../students/data');
 const { schemaCreateResearcher, schemaUpdateResearcher, schemaUserId } = require('../validations');
 
@@ -38,7 +38,7 @@ const researcherMutations = {
           const researcherToCreate = new Researcher(input);
           const researcherCreated = await researcherToCreate.save();
 
-          return parseResearcher(researcherCreated);
+          return researcherCreated;
         }
 
         return new GraphQLError({
