@@ -21,6 +21,8 @@ const studentTypes = `
       usuario: String
       fechaIngreso: DateTime
       activo: String
+      message: String
+      wasSuccessful: Boolean
     }
 
     input StudentInput {
