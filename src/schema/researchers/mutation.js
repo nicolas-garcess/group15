@@ -9,7 +9,7 @@ const {
 } = require('../projects/data');
 const { getResearcherByEmail, getResearcherById, parseResearcher } = require('./data');
 const { parseResponse } = require('../students/data');
-const { schemaCreateResearcher } = require('../validations');
+const { schemaCreateResearcher, schemaUpdateResearcher } = require('../validations');
 
 const researcherMutations = {
   async createResearcher(_, { input }) {
@@ -42,13 +42,13 @@ const researcherMutations = {
         }
 
         return new GraphQLError({
-          error: 'The researcher ID already exists',
+          error: `The researcher ID ${input.id} already exists`,
           wasSuccessful: false,
         });
       }
 
       return new GraphQLError({
-        error: 'The researcher already exists',
+        error: `The email ${input.email} already exists`,
         wasSuccessful: false,
       });
     }
@@ -59,27 +59,66 @@ const researcherMutations = {
     });
   },
   async updateResearcher(_, { id, input }) {
-    const researcherById = await getResearcherById(id);
-    let response = null;
+    const { error } = schemaUpdateResearcher.validate(
+      { id, ...input },
+      { abortEarly: false },
+    );
 
-    if (researcherById !== null) {
-      if (input.idProyecto && input.idProyecto !== researcherById.idProyecto) {
-        response = await disableResearcherFromProject(id, researcherById.idProyecto);
-
-        const researcherRegisteredInAProject = await findResearcherInAProject(input.idProyecto, id);
-        response = researcherRegisteredInAProject !== null
-          ? await updateResearcherStatusInAProject(input.idProyecto, id, false)
-          : await addResearcherToProject(id, input.idProyecto);
-      }
-
-      const updatedResearcher = await Researcher.findOneAndUpdate({ id }, input, { new: true });
-
-      return {
-        ...parseResearcher(updatedResearcher), message: 'Researcher updated', wasSuccessful: true, ...parseResponse(response),
-      };
+    if (error) {
+      throw new GraphQLError({
+        error: `${error}`,
+        wasSuccessful: false,
+      });
     }
 
-    return { message: 'Researcher Id does not exist', wasSuccessful: false };
+    const researcherById = await getResearcherById(id);
+    const projectId = typeof input.idProyecto !== 'undefined' ? input.idProyecto : researcherById.idProyecto;
+
+    const project = await getProjectById(projectId);
+
+    let response = null;
+
+    if (project !== null) {
+      if (researcherById !== null) {
+        const email = typeof input.email !== 'undefined' ? input.email : researcherById.email;
+        const researcherByEmail = await getResearcherByEmail(email);
+
+        if (id === researcherByEmail.id) {
+          if (projectId !== researcherById.idProyecto) {
+            response = await disableResearcherFromProject(id, researcherById.idProyecto);
+
+            const researcherRegisteredInAProject = await findResearcherInAProject(
+              input.idProyecto,
+              id,
+            );
+            response = researcherRegisteredInAProject !== null
+              ? await updateResearcherStatusInAProject(input.idProyecto, id, false)
+              : await addResearcherToProject(id, input.idProyecto);
+          }
+
+          const updatedResearcher = await Researcher.findOneAndUpdate({ id }, input, { new: true });
+
+          return {
+            ...parseResearcher(updatedResearcher), message: 'Researcher updated', wasSuccessful: true, ...parseResponse(response),
+          };
+        }
+
+        return new GraphQLError({
+          error: `The email ${input.email} already exists`,
+          wasSuccessful: false,
+        });
+      }
+
+      return new GraphQLError({
+        error: `The researcher ID ${id} doest not exist`,
+        wasSuccessful: false,
+      });
+    }
+
+    return new GraphQLError({
+      error: `The project Id ${input.idProyecto} does not exist`,
+      wasSuccessful: false,
+    });
   },
   async updateResearcherPassword(_, { id, password }) {
     return Researcher.findOneAndUpdate({ id }, { contrasena: password }, { new: true });

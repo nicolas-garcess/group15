@@ -44,7 +44,6 @@ const studentTypes = `
       celular: String
       idProyecto: String
       email: String
-      usuario: String
       fechaIngreso: DateTime
       activo: Boolean
     }

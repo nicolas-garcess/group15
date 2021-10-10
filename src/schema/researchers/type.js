@@ -38,7 +38,6 @@ const researcherTypes = `
       nombre: String
       idProyecto: String
       email: String
-      usuario: String
       horasDedicacion: Int
       activo: Boolean
     }

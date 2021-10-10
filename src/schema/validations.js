@@ -59,11 +59,11 @@ const schemaCreateResearcher = Joi.object({
 });
 
 const schemaUpdateResearcher = Joi.object({
+  id: Joi.string().min(3).max(15).required(),
   nombre: Joi.string().min(3).max(40),
   idProyecto: Joi.string().min(3).max(20),
   email: Joi.string().min(6).max(30)
     .email(),
-  usuario: Joi.string().min(6).max(30),
   horasDedicacion: Joi.number().min(8).max(40),
   activo: Joi.boolean(),
 });
@@ -85,13 +85,13 @@ const schemaCreateStudent = Joi.object({
 });
 
 const schemaUpdateStudent = Joi.object({
+  id: Joi.string().min(3).max(15).required(),
   nombre: Joi.string().min(3).max(40),
   carrera: Joi.string().min(3).max(30),
   celular: Joi.string().min(10).max(10),
   idProyecto: Joi.string().min(3).max(20),
   email: Joi.string().min(6).max(30)
     .email(),
-  usuario: Joi.string().min(6).max(30),
   fechaIngreso: Joi.date(),
   activo: Joi.boolean(),
 });
