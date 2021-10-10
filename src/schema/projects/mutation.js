@@ -3,7 +3,13 @@ const Project = require('../../models/projects.model');
 const {
   getProjectById, calculateProjectProgress, disableStudentsOfAProject, disableResearchersOfAProject,
 } = require('./data');
-const { schemaCreateProject } = require('../validations');
+const {
+  schemaCreateProject,
+  schemaProjectId,
+  schemaUpdateProject,
+  schemaUpdateResearcherInAProject,
+  schemaUpdateStudentInAProject,
+} = require('../validations');
 
 const projectMutations = {
   async createProject(_, { input }) {
@@ -16,7 +22,9 @@ const projectMutations = {
       });
     }
 
-    if (getProjectById(input.idProyecto) === null) {
+    const project = await getProjectById(input.idProyecto);
+
+    if (project === null) {
       await disableStudentsOfAProject(input.estudiantes, input.idProyecto);
       await disableResearchersOfAProject(input.investigadores, input.idProyecto);
 
@@ -33,36 +41,108 @@ const projectMutations = {
     });
   },
   async updateProject(_, { idProyecto, input }) {
-    const projectProgress = calculateProjectProgress(input, idProyecto);
-    const queryData = { ...input, ...projectProgress };
+    const { error } = schemaUpdateProject.validate({ idProyecto, ...input }, { abortEarly: false });
 
-    return Project.findOneAndUpdate({ idProyecto }, queryData, { new: true });
+    if (error) {
+      throw new GraphQLError({
+        error: `${error}`,
+        wasSuccessful: false,
+      });
+    }
+
+    const project = await getProjectById(idProyecto);
+
+    if (project !== null) {
+      const projectProgress = calculateProjectProgress(input, idProyecto);
+      const queryData = { ...input, ...projectProgress };
+
+      return Project.findOneAndUpdate({ idProyecto }, queryData, { new: true });
+    }
+
+    return new GraphQLError({
+      error: `The project Id ${idProyecto} does not exist`,
+      wasSuccessful: false,
+    });
   },
   async updateStudentStatusInAProject(_, { idProyecto, input }) {
-    return Project.findOneAndUpdate(
-      {
-        $and: [
-          { idProyecto },
-          { 'estudiantes.idEstudiante': input.idEstudiante },
-        ],
-      },
-      { $set: { 'estudiantes.$.activoEnElProyecto': input.activoEnElProyecto } },
-      { new: true },
+    const { error } = schemaUpdateStudentInAProject.validate(
+      { idProyecto, ...input },
+      { abortEarly: false },
     );
+
+    if (error) {
+      throw new GraphQLError({
+        error: `${error}`,
+        wasSuccessful: false,
+      });
+    }
+
+    const project = await getProjectById(idProyecto);
+
+    if (project !== null) {
+      return Project.findOneAndUpdate(
+        {
+          $and: [
+            { idProyecto },
+            { 'estudiantes.idEstudiante': input.idEstudiante },
+          ],
+        },
+        { $set: { 'estudiantes.$.activoEnElProyecto': input.activoEnElProyecto } },
+        { new: true },
+      );
+    }
+
+    return new GraphQLError({
+      error: `The project Id ${idProyecto} does not exist`,
+      wasSuccessful: false,
+    });
   },
   async updateResearcherStatusInAProject(_, { idProyecto, input }) {
-    return Project.findOneAndUpdate(
-      {
-        $and: [
-          { idProyecto },
-          { 'investigadores.idInvestigador': input.idInvestigador },
-        ],
-      },
-      { $set: { 'investigadores.$.activoEnElProyecto': input.activoEnElProyecto } },
-      { new: true },
+    const { error } = schemaUpdateResearcherInAProject.validate(
+      { idProyecto, ...input },
+      { abortEarly: false },
     );
+
+    if (error) {
+      throw new GraphQLError({
+        error: `${error}`,
+        wasSuccessful: false,
+      });
+    }
+
+    const project = await getProjectById(idProyecto);
+
+    if (project !== null) {
+      return Project.findOneAndUpdate(
+        {
+          $and: [
+            { idProyecto },
+            { 'investigadores.idInvestigador': input.idInvestigador },
+          ],
+        },
+        { $set: { 'investigadores.$.activoEnElProyecto': input.activoEnElProyecto } },
+        { new: true },
+      );
+    }
+
+    return new GraphQLError({
+      error: `The project Id ${idProyecto} does not exist`,
+      wasSuccessful: false,
+    });
   },
   async deleteProjectById(_, { idProyecto }) {
+    const { error } = schemaProjectId.validate(
+      { idProyecto },
+      { abortEarly: false },
+    );
+
+    if (error) {
+      throw new GraphQLError({
+        error: `${error}`,
+        wasSuccessful: false,
+      });
+    }
+
     try {
       const deletedProject = await Project.findOneAndDelete({ idProyecto });
 
@@ -76,7 +156,7 @@ const projectMutations = {
         message: `The project ${idProyecto} does not exist`,
         wasSuccessful: false,
       };
-    } catch (error) {
+    } catch (err) {
       return {
         message: 'Something went wrong',
         wasSuccessful: false,

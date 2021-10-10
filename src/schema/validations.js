@@ -16,25 +16,32 @@ const schemaCreateProject = Joi.object({
   notas: Joi.array().required(),
 });
 
+const schemaProjectId = Joi.object({
+  idProyecto: Joi.string().min(3).max(15).required(),
+});
+
 const schemaUpdateProject = Joi.object({
-  descripcion: Joi.string().min(1).required(),
-  objetivos: Joi.object().required(),
-  presupuesto: Joi.number().required(),
-  fechaInicial: Joi.date().required(),
-  fechaFinal: Joi.date().required(),
-  directorProyecto: Joi.string().min(3).required(),
-  estaDisponible: Joi.boolean().required(),
-  notas: Joi.array().required(),
+  idProyecto: Joi.string().min(3).max(15).required(),
+  descripcion: Joi.string().min(1),
+  objetivos: Joi.object(),
+  presupuesto: Joi.number(),
+  fechaInicial: Joi.date(),
+  fechaFinal: Joi.date(),
+  directorProyecto: Joi.string().min(3),
+  estaDisponible: Joi.boolean(),
+  notas: Joi.array(),
 });
 
 const schemaUpdateResearcherInAProject = Joi.object({
+  idProyecto: Joi.string().min(3).max(15).required(),
   idInvestigador: Joi.string().min(3).max(15),
   activo: Joi.boolean(),
 });
 
 const schemaUpdateStudentInAProject = Joi.object({
-  idEstudiante: Joi.string().min(3).max(15),
-  activo: Joi.boolean(),
+  idProyecto: Joi.string().min(3).max(15).required(),
+  idEstudiante: Joi.string().min(3).max(15).required(),
+  activo: Joi.boolean().required(),
 });
 
 // Researcher validations
@@ -91,6 +98,7 @@ const schemaUpdateStudent = Joi.object({
 
 module.exports = {
   schemaCreateProject,
+  schemaProjectId,
   schemaUpdateProject,
   schemaCreateResearcher,
   schemaUpdateResearcher,

@@ -1,5 +1,7 @@
+const { GraphQLError } = require('graphql');
 const Researcher = require('../../models/researchers.model');
 const {
+  getProjectById,
   addResearcherToProject,
   disableResearcherFromProject,
   findResearcherInAProject,
@@ -7,24 +9,54 @@ const {
 } = require('../projects/data');
 const { getResearcherByEmail, getResearcherById, parseResearcher } = require('./data');
 const { parseResponse } = require('../students/data');
+const { schemaCreateResearcher } = require('../validations');
 
 const researcherMutations = {
   async createResearcher(_, { input }) {
-    const researcherByEmail = await getResearcherByEmail(input.email);
-    const researcherById = await getResearcherById(input.id);
+    const { error } = schemaCreateResearcher.validate(
+      input,
+      { abortEarly: false },
+    );
 
-    if (researcherByEmail === null) {
-      if (researcherById === null) {
-        addResearcherToProject(input.id, input.idProyecto);
-        const researcherToCreate = new Researcher(input);
-        const researcherCreated = await researcherToCreate.save();
-
-        return { ...parseResearcher(researcherCreated), message: 'Researcher created', wasSuccessful: true };
-      }
-      return { message: 'The researcher ID already exists', wasSuccessful: false };
+    if (error) {
+      throw new GraphQLError({
+        error: `${error}`,
+        wasSuccessful: false,
+      });
     }
 
-    return { message: 'The researcher already exists', wasSuccessful: false };
+    const project = await getProjectById(input.idProyecto);
+
+    if (project !== null) {
+      const researcherByEmail = await getResearcherByEmail(input.email);
+
+      if (researcherByEmail === null) {
+        const researcherById = await getResearcherById(input.id);
+
+        if (researcherById === null) {
+          addResearcherToProject(input.id, input.idProyecto);
+          const researcherToCreate = new Researcher(input);
+          const researcherCreated = await researcherToCreate.save();
+
+          return parseResearcher(researcherCreated);
+        }
+
+        return new GraphQLError({
+          error: 'The researcher ID already exists',
+          wasSuccessful: false,
+        });
+      }
+
+      return new GraphQLError({
+        error: 'The researcher already exists',
+        wasSuccessful: false,
+      });
+    }
+
+    return new GraphQLError({
+      error: `The project Id ${input.idProyecto} does not exist`,
+      wasSuccessful: false,
+    });
   },
   async updateResearcher(_, { id, input }) {
     const researcherById = await getResearcherById(id);

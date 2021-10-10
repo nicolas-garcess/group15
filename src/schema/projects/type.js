@@ -50,7 +50,6 @@ const researcherTypes = `
       estudiantes: [ProjectStudentResponse]
       investigadores: [ProjectResearcherResponse]
       notas: [Note]
-      response: Response
     }
 
     input ProjectInput {
@@ -154,13 +153,13 @@ const researcherTypes = `
     }
 
     input ProjectStudentUpdate {
-      idEstudiante: String
-      activoEnElProyecto: Boolean
+      idEstudiante: String!
+      activoEnElProyecto: Boolean!
     }
 
     input ProjectResearcherUpdate {
-      idInvestigador: String
-      activoEnElProyecto: Boolean
+      idInvestigador: String!
+      activoEnElProyecto: Boolean!
     }
 
     input NoteUpdate {
