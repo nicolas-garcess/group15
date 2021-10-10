@@ -19,6 +19,7 @@ const studentTypes = `
       idProyecto: String
       email: String
       usuario: String
+      fechaIngreso: DateTime
       activo: String
       message: String
       wasSuccessful: Boolean
@@ -33,6 +34,7 @@ const studentTypes = `
       email: String!
       usuario: String!
       contrasena: String!
+      fechaIngreso: DateTime
       activo: Boolean!
     }
 
@@ -42,7 +44,7 @@ const studentTypes = `
       celular: String
       idProyecto: String
       email: String
-      usuario: String
+      fechaIngreso: DateTime
       activo: Boolean
     }
 `;

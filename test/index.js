@@ -15,6 +15,7 @@ describe('Students schema validation', () => {
       email: 'juan.gonzalez@gmail.com',
       usuario: 'juan.gonzalez',
       contrasena: '123456789',
+      fechaIngeso: new Date(),
     });
     student1.validate((err) => {
       expect(err?.errors.usuario).to.undefined;
@@ -32,6 +33,7 @@ describe('Students schema validation', () => {
       email: 'juan.gonzalez@gmail.com',
       usuario: 'juan.gonzalez',
       contrasena: '123456789',
+      fechaIngeso: new Date(),
     });
     student1.validate((err) => {
       expect(err.errors.celular).to.exist;
@@ -49,6 +51,7 @@ describe('Students schema validation', () => {
       email: 'juan.gonzalez@gmail.com',
       usuario: 'juan.gonzalez',
       contrasena: '123456789',
+      fechaIngeso: new Date(),
     });
     student1.validate((err) => {
       expect(err.errors.activo).to.exist;
@@ -94,6 +97,7 @@ describe('Researchers schema validation', () => {
 
 const project = new Project({
   idProyecto: 'proyecto001',
+  descripcion: 'descripción proyecto 1',
   objetivos: {
     objetivoGeneral: {
       idObjetivo: 'objG001',
