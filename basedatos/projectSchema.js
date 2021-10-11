@@ -4,21 +4,21 @@ db.projects.insertOne({
     objetivoGeneral: {
       idObjetivo: 'proyecto002ObjG1',
       descripcion: 'lorem ipsum dolo',
-      cumplido: false
+      cumplido: false,
     },
     objetivosEspecificos:
       [
         {
           idObjetivo: 'proyecto002ObjE1',
           descripcion: 'lorem ipsum dolo',
-          cumplido: false
+          cumplido: false,
         },
         {
           idObjetivo: 'proyecto002ObjE2',
           descripcion: 'lorem ipsum dolo',
-          cumplido: false
-        }
-      ]
+          cumplido: false,
+        },
+      ],
   },
   presupuesto: 100000000,
   fechaInicial: new Date('2021-05-01T08:00:00Z'),
@@ -30,35 +30,35 @@ db.projects.insertOne({
   estudiantes: [
     {
       idEstudiante: 'estudiante003',
-      activo: true
+      activo: true,
     },
     {
       idEstudiante: 'estudiante004',
-      activo: true
+      activo: true,
     },
   ],
   investigadores: [
     {
       idInvestigador: 'investigador002',
-      activo: true
+      activo: true,
     },
   ],
   notas: {
     nota001: 'descripcionNota',
-  }
-})
+  },
+});
 
 db.investigadores.insertOne(
   {
-    idInvestigador: "001",
-    nombre: "Carlos Gonzalez",
+    idInvestigador: '001',
+    nombre: 'Carlos Gonzalez',
     horasDedicacion: 5,
-    idProyecto: "proyecto002",
-    usuario: "C.Gonzalez",
-    contraseña: "casa"
- }
-)
+    idProyecto: 'proyecto002',
+    usuario: 'C.Gonzalez',
+    contraseña: 'casa',
+  },
+);
 
 db.projects.find({
-  avance: { $gt: 50 }
-})
+  avance: { $gt: 50 },
+});
