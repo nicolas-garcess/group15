@@ -35,13 +35,13 @@ const schemaUpdateProject = Joi.object({
 const schemaUpdateResearcherInAProject = Joi.object({
   idProyecto: Joi.string().min(3).max(15).required(),
   idInvestigador: Joi.string().min(3).max(15),
-  activo: Joi.boolean(),
+  activoEnElProyecto: Joi.boolean(),
 });
 
 const schemaUpdateStudentInAProject = Joi.object({
   idProyecto: Joi.string().min(3).max(15).required(),
   idEstudiante: Joi.string().min(3).max(15).required(),
-  activo: Joi.boolean().required(),
+  activoEnElProyecto: Joi.boolean().required(),
 });
 
 // Researcher validations
