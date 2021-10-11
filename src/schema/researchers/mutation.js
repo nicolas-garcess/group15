@@ -7,7 +7,7 @@ const {
   findResearcherInAProject,
   updateResearcherStatusInAProject,
 } = require('../projects/data');
-const { getResearcherByEmail, getResearcherById } = require('./data');
+const { getResearcherByEmail, getResearcherById, parseResearcher } = require('./data');
 const { parseResponse } = require('../students/data');
 const { schemaCreateResearcher, schemaUpdateResearcher, schemaUserId } = require('../validations');
 
