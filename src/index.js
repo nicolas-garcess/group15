@@ -1,5 +1,4 @@
 const app = require('./server');
-require('dotenv').config();
 
 const PORT = app.get('port');
 require('./database');

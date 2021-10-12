@@ -20,7 +20,7 @@ const studentTypes = `
       email: String
       usuario: String
       fechaIngreso: DateTime
-      activo: String
+      activo: Boolean
       message: String
       wasSuccessful: Boolean
     }

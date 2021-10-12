@@ -83,7 +83,7 @@ const studentMutations = {
         const email = typeof input.email !== 'undefined' ? input.email : studentById.email;
         const studentByEmail = await getStudentByEmail(email);
 
-        if (id === studentByEmail.id) {
+        if (id === studentByEmail?.id) {
           if (projectId !== studentById.idProyecto) {
             response = await disableStudentFromProject(id, studentById.idProyecto);
 
