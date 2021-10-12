@@ -83,7 +83,7 @@ const researcherMutations = {
         const email = typeof input.email !== 'undefined' ? input.email : researcherById.email;
         const researcherByEmail = await getResearcherByEmail(email);
 
-        if (id === researcherByEmail?.id) {
+        if (id === researcherByEmail?.id || researcherByEmail === null) {
           if (projectId !== researcherById.idProyecto) {
             response = await disableResearcherFromProject(id, researcherById.idProyecto);
 
