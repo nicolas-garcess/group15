@@ -4,7 +4,8 @@ const { getProjectById, assignResearchersAndStudentsDataToProjects } = require('
 const { schemaProjectId } = require('../validations');
 
 const projectQueries = {
-  async projects() {
+  async projects(_, __, { token }) {
+    console.log(token, 'request');
     try {
       const projects = await Project.aggregate([{
         $lookup: {
