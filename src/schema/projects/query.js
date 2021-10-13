@@ -2,10 +2,19 @@ const { GraphQLError } = require('graphql');
 const Project = require('../../models/projects.model');
 const { getProjectById, assignResearchersAndStudentsDataToProjects } = require('./data');
 const { schemaProjectId } = require('../validations');
+const { verifyResearcher, verifyUser } = require('../../helpers');
 
 const projectQueries = {
   async projects(_, __, { token }) {
-    console.log(token, 'request');
+    const { message, isDenied } = verifyResearcher(token);
+
+    if (isDenied) {
+      throw new GraphQLError({
+        error: message,
+        wasSuccessful: false,
+      });
+    }
+
     try {
       const projects = await Project.aggregate([{
         $lookup: {
@@ -26,6 +35,15 @@ const projectQueries = {
     }
   },
   async project(_, { idProyecto }) {
+    const { message, isDenied } = verifyUser(token);
+
+    if (isDenied) {
+      throw new GraphQLError({
+        error: message,
+        wasSuccessful: false,
+      });
+    }
+
     const { error } = schemaProjectId.validate(
       { idProyecto },
       { abortEarly: false },
