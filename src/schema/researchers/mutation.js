@@ -9,8 +9,9 @@ const {
 } = require('../projects/data');
 const { getResearcherByEmail, getResearcherById, parseResearcher } = require('./data');
 const { parseResponse } = require('../students/data');
-const { schemaCreateResearcher, schemaUpdateResearcher, schemaUserId } = require('../validations');
-const { verifyResearcher } = require('../../helpers');
+const {
+  schemaCreateResearcher, schemaUpdateResearcher, schemaUserId, verifyResearcher,
+} = require('../../helpers');
 
 const researcherMutations = {
   async createResearcher(_, { input }, { token }) {

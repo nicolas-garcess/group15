@@ -1,8 +1,7 @@
 const { GraphQLError } = require('graphql');
 const Project = require('../../models/projects.model');
 const { getProjectById, assignResearchersAndStudentsDataToProjects } = require('./data');
-const { schemaProjectId } = require('../validations');
-const { verifyResearcher, verifyUser } = require('../../helpers');
+const { schemaProjectId, verifyResearcher, verifyUser } = require('../../helpers');
 
 const projectQueries = {
   async projects(_, __, { token }) {

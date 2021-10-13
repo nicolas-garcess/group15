@@ -10,8 +10,9 @@ const {
 const {
   getStudentByEmail, getStudentById, parseResponse, parseStudent,
 } = require('./data');
-const { schemaCreateStudent, schemaUpdateStudent, schemaUserId } = require('../validations');
-const { verifyResearcher, verifyUser } = require('../../helpers');
+const {
+  schemaCreateStudent, schemaUpdateStudent, schemaUserId, verifyResearcher, verifyUser,
+} = require('../../helpers');
 
 const studentMutations = {
   async createStudent(_, { input }, { token }) {

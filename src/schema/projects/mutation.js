@@ -9,8 +9,8 @@ const {
   schemaUpdateProject,
   schemaUpdateResearcherInAProject,
   schemaUpdateStudentInAProject,
-} = require('../validations');
-const { verifyResearcher } = require('../../helpers');
+  verifyResearcher,
+} = require('../../helpers');
 
 const projectMutations = {
   async createProject(_, { input }, { token }) {
