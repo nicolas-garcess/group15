@@ -34,7 +34,7 @@ const projectQueries = {
       };
     }
   },
-  async project(_, { idProyecto }) {
+  async project(_, { idProyecto }, { token }) {
     const { message, isDenied } = verifyUser(token);
 
     if (isDenied) {

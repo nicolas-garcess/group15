@@ -10,9 +10,19 @@ const {
 const { getResearcherByEmail, getResearcherById, parseResearcher } = require('./data');
 const { parseResponse } = require('../students/data');
 const { schemaCreateResearcher, schemaUpdateResearcher, schemaUserId } = require('../validations');
+const { verifyResearcher } = require('../../helpers');
 
 const researcherMutations = {
-  async createResearcher(_, { input }) {
+  async createResearcher(_, { input }, { token }) {
+    const { message, isDenied } = verifyResearcher(token);
+
+    if (isDenied) {
+      throw new GraphQLError({
+        error: message,
+        wasSuccessful: false,
+      });
+    }
+
     const { error } = schemaCreateResearcher.validate(
       input,
       { abortEarly: false },
@@ -58,7 +68,23 @@ const researcherMutations = {
       wasSuccessful: false,
     });
   },
-  async updateResearcher(_, { id, input }) {
+  async updateResearcher(_, { id, input }, { token }) {
+    const { data, message, isDenied } = verifyResearcher(token);
+
+    if (isDenied) {
+      throw new GraphQLError({
+        error: message,
+        wasSuccessful: false,
+      });
+    }
+
+    if (data.id !== id) {
+      throw new GraphQLError({
+        error: 'You do not have the permission',
+        wasSuccessful: false,
+      });
+    }
+
     const { error } = schemaUpdateResearcher.validate(
       { id, ...input },
       { abortEarly: false },
@@ -120,10 +146,42 @@ const researcherMutations = {
       wasSuccessful: false,
     });
   },
-  async updateResearcherPassword(_, { id, password }) {
+  async updateResearcherPassword(_, { id, password }, { token }) {
+    const { message, isDenied } = verifyResearcher(token);
+
+    if (isDenied) {
+      throw new GraphQLError({
+        error: message,
+        wasSuccessful: false,
+      });
+    }
+
+    if (data.id !== id) {
+      throw new GraphQLError({
+        error: 'You do not have the permission',
+        wasSuccessful: false,
+      });
+    }
+
     return Researcher.findOneAndUpdate({ id }, { contrasena: password }, { new: true });
   },
-  async deleteResearcherById(_, { id }) {
+  async deleteResearcherById(_, { id }, { token }) {
+    const { message, isDenied } = verifyResearcher(token);
+
+    if (isDenied) {
+      throw new GraphQLError({
+        error: message,
+        wasSuccessful: false,
+      });
+    }
+
+    if (data.id !== id) {
+      throw new GraphQLError({
+        error: 'You do not have the permission',
+        wasSuccessful: false,
+      });
+    }
+
     const { error } = schemaUserId.validate(
       { id },
       { abortEarly: false },

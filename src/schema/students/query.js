@@ -1,12 +1,38 @@
 const { GraphQLError } = require('graphql');
 const Student = require('../../models/students.model');
 const { schemaUserId } = require('../validations');
+const { verifyResearcher, verifyUser } = require('../../helpers');
 
 const studentQueries = {
-  async students() {
+  async students(_, __, { token }) {
+    const { message, isDenied } = verifyResearcher(token);
+
+    if (isDenied) {
+      throw new GraphQLError({
+        error: message,
+        wasSuccessful: false,
+      });
+    }
+
     return Student.find();
   },
-  async student(_, { id }) {
+  async student(_, { id }, { token }) {
+    const { message, isDenied } = verifyUser(token);
+
+    if (isDenied) {
+      throw new GraphQLError({
+        error: message,
+        wasSuccessful: false,
+      });
+    }
+
+    if (data.rol === 'student' && data.id !== id) {
+      throw new GraphQLError({
+        error: 'You do not have the permission',
+        wasSuccessful: false,
+      });
+    }
+
     const { error } = schemaUserId.validate(
       { id },
       { abortEarly: false },

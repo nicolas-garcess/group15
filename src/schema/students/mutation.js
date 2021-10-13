@@ -11,9 +11,19 @@ const {
   getStudentByEmail, getStudentById, parseResponse, parseStudent,
 } = require('./data');
 const { schemaCreateStudent, schemaUpdateStudent, schemaUserId } = require('../validations');
+const { verifyResearcher, verifyUser } = require('../../helpers');
 
 const studentMutations = {
-  async createStudent(_, { input }) {
+  async createStudent(_, { input }, { token }) {
+    const { message, isDenied } = verifyResearcher(token);
+
+    if (isDenied) {
+      throw new GraphQLError({
+        error: message,
+        wasSuccessful: false,
+      });
+    }
+
     const { error } = schemaCreateStudent.validate(
       input,
       { abortEarly: false },
@@ -58,7 +68,23 @@ const studentMutations = {
       wasSuccessful: false,
     });
   },
-  async updateStudent(_, { id, input }) {
+  async updateStudent(_, { id, input }, { token }) {
+    const { data, message, isDenied } = verifyUser(token);
+
+    if (isDenied) {
+      throw new GraphQLError({
+        error: message,
+        wasSuccessful: false,
+      });
+    }
+
+    if (data.rol === 'student' && data.id !== id) {
+      throw new GraphQLError({
+        error: 'You do not have the permission',
+        wasSuccessful: false,
+      });
+    }
+
     const { error } = schemaUpdateStudent.validate(
       { id, ...input },
       { abortEarly: false },
@@ -117,10 +143,35 @@ const studentMutations = {
       wasSuccessful: false,
     });
   },
-  async updatePassword(_, { id, password }) {
+  async updatePassword(_, { id, password }, { token }) {
+    const { data, message, isDenied } = verifyUser(token);
+
+    if (isDenied) {
+      throw new GraphQLError({
+        error: message,
+        wasSuccessful: false,
+      });
+    }
+
+    if (data.id !== id) {
+      throw new GraphQLError({
+        error: 'You do not have the permission',
+        wasSuccessful: false,
+      });
+    }
+
     return Student.findOneAndUpdate({ id }, { contrasena: password }, { new: true });
   },
-  async deleteStudentById(_, { id }) {
+  async deleteStudentById(_, { id }, { token }) {
+    const { message, isDenied } = verifyResearcher(token);
+
+    if (isDenied) {
+      throw new GraphQLError({
+        error: message,
+        wasSuccessful: false,
+      });
+    }
+
     const { error } = schemaUserId.validate(
       { id },
       { abortEarly: false },
