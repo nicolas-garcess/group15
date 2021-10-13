@@ -16,7 +16,7 @@ const studentQueries = {
     return Student.find();
   },
   async student(_, { id }, { token }) {
-    const { message, isDenied } = verifyUser(token);
+    const { data, message, isDenied } = verifyUser(token);
 
     if (isDenied) {
       throw new GraphQLError({

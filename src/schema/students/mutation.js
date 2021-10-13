@@ -152,7 +152,7 @@ const studentMutations = {
       wasSuccessful: false,
     });
   },
-  async updatePassword(_, { id, password }, { token }) {
+  async updateStudentPassword(_, { id, password }, { token }) {
     const { data, message, isDenied } = verifyUser(token);
 
     if (isDenied) {

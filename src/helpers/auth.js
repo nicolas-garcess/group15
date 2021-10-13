@@ -51,7 +51,7 @@ const verifyUser = (token) => {
   }
 
   try {
-    const verified = decode(token);
+    const verified = decodeToken(token);
     const { rol } = verified;
 
     if (rol === 'researcher' || rol === 'student') {

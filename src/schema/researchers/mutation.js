@@ -151,7 +151,7 @@ const researcherMutations = {
     });
   },
   async updateResearcherPassword(_, { id, password }, { token }) {
-    const { message, isDenied } = verifyResearcher(token);
+    const { data, message, isDenied } = verifyResearcher(token);
 
     if (isDenied) {
       throw new GraphQLError({
@@ -172,7 +172,7 @@ const researcherMutations = {
     return Researcher.findOneAndUpdate({ id }, { contrasena: hashedPassword }, { new: true });
   },
   async deleteResearcherById(_, { id }, { token }) {
-    const { message, isDenied } = verifyResearcher(token);
+    const { data, message, isDenied } = verifyResearcher(token);
 
     if (isDenied) {
       throw new GraphQLError({
