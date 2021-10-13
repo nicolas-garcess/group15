@@ -10,7 +10,7 @@ const {
 const { getResearcherByEmail, getResearcherById, parseResearcher } = require('./data');
 const { parseResponse } = require('../students/data');
 const {
-  schemaCreateResearcher, schemaUpdateResearcher, schemaUserId, verifyResearcher,
+  hashPassword, schemaCreateResearcher, schemaUpdateResearcher, schemaUserId, verifyResearcher,
 } = require('../../helpers');
 
 const researcherMutations = {
@@ -46,7 +46,10 @@ const researcherMutations = {
 
         if (researcherById === null) {
           addResearcherToProject(input.id, input.idProyecto);
-          const researcherToCreate = new Researcher(input);
+
+          const hashedPassword = await hashPassword(input.contrasena, 10);
+
+          const researcherToCreate = new Researcher({ ...input, contrasena: hashedPassword });
           const researcherCreated = await researcherToCreate.save();
 
           return researcherCreated;
@@ -164,7 +167,9 @@ const researcherMutations = {
       });
     }
 
-    return Researcher.findOneAndUpdate({ id }, { contrasena: password }, { new: true });
+    const hashedPassword = await hashPassword(password, 10);
+
+    return Researcher.findOneAndUpdate({ id }, { contrasena: hashedPassword }, { new: true });
   },
   async deleteResearcherById(_, { id }, { token }) {
     const { message, isDenied } = verifyResearcher(token);

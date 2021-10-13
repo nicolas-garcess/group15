@@ -11,7 +11,12 @@ const {
   getStudentByEmail, getStudentById, parseResponse, parseStudent,
 } = require('./data');
 const {
-  schemaCreateStudent, schemaUpdateStudent, schemaUserId, verifyResearcher, verifyUser,
+  schemaCreateStudent,
+  schemaUpdateStudent,
+  schemaUserId,
+  verifyResearcher,
+  verifyUser,
+  hashPassword,
 } = require('../../helpers');
 
 const studentMutations = {
@@ -47,7 +52,10 @@ const studentMutations = {
 
         if (studentById === null) {
           addStudentToProject(input.id, input.idProyecto);
-          const studentToCreate = new Student(input);
+
+          const hashedPassword = await hashPassword(input.contrasena, 10);
+
+          const studentToCreate = new Student({ ...input, contrasena: hashedPassword });
           const studentCreated = await studentToCreate.save();
 
           return studentCreated;
@@ -160,8 +168,9 @@ const studentMutations = {
         wasSuccessful: false,
       });
     }
+    const hashedPassword = await hashPassword(password, 10);
 
-    return Student.findOneAndUpdate({ id }, { contrasena: password }, { new: true });
+    return Student.findOneAndUpdate({ id }, { contrasena: hashedPassword }, { new: true });
   },
   async deleteStudentById(_, { id }, { token }) {
     const { message, isDenied } = verifyResearcher(token);
