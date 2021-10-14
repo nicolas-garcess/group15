@@ -15,9 +15,7 @@ app.get('/', (req, res) => {
 
 app.use('/graphql', graphqlHTTP(async (req) => ({
   schema,
-  graphiql: {
-    headerEditorEnabled: true,
-  },
+  graphiql: false,
   context: {
     token: req.headers['auth-token'],
   },
