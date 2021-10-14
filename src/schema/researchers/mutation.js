@@ -9,10 +9,21 @@ const {
 } = require('../projects/data');
 const { getResearcherByEmail, getResearcherById, parseResearcher } = require('./data');
 const { parseResponse } = require('../students/data');
-const { schemaCreateResearcher, schemaUpdateResearcher, schemaUserId } = require('../validations');
+const {
+  hashPassword, schemaCreateResearcher, schemaUpdateResearcher, schemaUserId, verifyResearcher,
+} = require('../../helpers');
 
 const researcherMutations = {
-  async createResearcher(_, { input }) {
+  async createResearcher(_, { input }, { token }) {
+    const { message, isDenied } = verifyResearcher(token);
+
+    if (isDenied) {
+      throw new GraphQLError({
+        error: message,
+        wasSuccessful: false,
+      });
+    }
+
     const { error } = schemaCreateResearcher.validate(
       input,
       { abortEarly: false },
@@ -35,7 +46,10 @@ const researcherMutations = {
 
         if (researcherById === null) {
           addResearcherToProject(input.id, input.idProyecto);
-          const researcherToCreate = new Researcher(input);
+
+          const hashedPassword = await hashPassword(input.contrasena, 10);
+
+          const researcherToCreate = new Researcher({ ...input, contrasena: hashedPassword });
           const researcherCreated = await researcherToCreate.save();
 
           return researcherCreated;
@@ -58,7 +72,23 @@ const researcherMutations = {
       wasSuccessful: false,
     });
   },
-  async updateResearcher(_, { id, input }) {
+  async updateResearcher(_, { id, input }, { token }) {
+    const { data, message, isDenied } = verifyResearcher(token);
+
+    if (isDenied) {
+      throw new GraphQLError({
+        error: message,
+        wasSuccessful: false,
+      });
+    }
+
+    if (data.id !== id) {
+      throw new GraphQLError({
+        error: 'You do not have the permission',
+        wasSuccessful: false,
+      });
+    }
+
     const { error } = schemaUpdateResearcher.validate(
       { id, ...input },
       { abortEarly: false },
@@ -120,10 +150,44 @@ const researcherMutations = {
       wasSuccessful: false,
     });
   },
-  async updateResearcherPassword(_, { id, password }) {
-    return Researcher.findOneAndUpdate({ id }, { contrasena: password }, { new: true });
+  async updateResearcherPassword(_, { id, password }, { token }) {
+    const { data, message, isDenied } = verifyResearcher(token);
+
+    if (isDenied) {
+      throw new GraphQLError({
+        error: message,
+        wasSuccessful: false,
+      });
+    }
+
+    if (data.id !== id) {
+      throw new GraphQLError({
+        error: 'You do not have the permission',
+        wasSuccessful: false,
+      });
+    }
+
+    const hashedPassword = await hashPassword(password, 10);
+
+    return Researcher.findOneAndUpdate({ id }, { contrasena: hashedPassword }, { new: true });
   },
-  async deleteResearcherById(_, { id }) {
+  async deleteResearcherById(_, { id }, { token }) {
+    const { data, message, isDenied } = verifyResearcher(token);
+
+    if (isDenied) {
+      throw new GraphQLError({
+        error: message,
+        wasSuccessful: false,
+      });
+    }
+
+    if (data.id !== id) {
+      throw new GraphQLError({
+        error: 'You do not have the permission',
+        wasSuccessful: false,
+      });
+    }
+
     const { error } = schemaUserId.validate(
       { id },
       { abortEarly: false },

@@ -9,10 +9,20 @@ const {
   schemaUpdateProject,
   schemaUpdateResearcherInAProject,
   schemaUpdateStudentInAProject,
-} = require('../validations');
+  verifyResearcher,
+} = require('../../helpers');
 
 const projectMutations = {
-  async createProject(_, { input }) {
+  async createProject(_, { input }, { token }) {
+    const { message, isDenied } = verifyResearcher(token);
+
+    if (isDenied) {
+      throw new GraphQLError({
+        error: message,
+        wasSuccessful: false,
+      });
+    }
+
     const { error } = schemaCreateProject.validate(input, { abortEarly: false });
 
     if (error) {
@@ -40,7 +50,16 @@ const projectMutations = {
       wasSuccessful: false,
     });
   },
-  async updateProject(_, { idProyecto, input }) {
+  async updateProject(_, { idProyecto, input }, { token }) {
+    const { message, isDenied } = verifyResearcher(token);
+
+    if (isDenied) {
+      throw new GraphQLError({
+        error: message,
+        wasSuccessful: false,
+      });
+    }
+
     const { error } = schemaUpdateProject.validate({ idProyecto, ...input }, { abortEarly: false });
 
     if (error) {
@@ -65,7 +84,16 @@ const projectMutations = {
     });
   },
   // TODO verify if necessary get the project before the update
-  async updateStudentStatusInAProject(_, { idProyecto, input }) {
+  async updateStudentStatusInAProject(_, { idProyecto, input }, { token }) {
+    const { message, isDenied } = verifyResearcher(token);
+
+    if (isDenied) {
+      throw new GraphQLError({
+        error: message,
+        wasSuccessful: false,
+      });
+    }
+
     const { error } = schemaUpdateStudentInAProject.validate(
       { idProyecto, ...input },
       { abortEarly: false },
@@ -98,7 +126,16 @@ const projectMutations = {
       wasSuccessful: false,
     });
   },
-  async updateResearcherStatusInAProject(_, { idProyecto, input }) {
+  async updateResearcherStatusInAProject(_, { idProyecto, input }, { token }) {
+    const { message, isDenied } = verifyResearcher(token);
+
+    if (isDenied) {
+      throw new GraphQLError({
+        error: message,
+        wasSuccessful: false,
+      });
+    }
+
     const { error } = schemaUpdateResearcherInAProject.validate(
       { idProyecto, ...input },
       { abortEarly: false },
@@ -131,7 +168,16 @@ const projectMutations = {
       wasSuccessful: false,
     });
   },
-  async deleteProjectById(_, { idProyecto }) {
+  async deleteProjectById(_, { idProyecto }, { token }) {
+    const { message, isDenied } = verifyResearcher(token);
+
+    if (isDenied) {
+      throw new GraphQLError({
+        error: message,
+        wasSuccessful: false,
+      });
+    }
+
     const { error } = schemaProjectId.validate(
       { idProyecto },
       { abortEarly: false },

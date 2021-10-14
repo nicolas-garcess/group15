@@ -13,9 +13,12 @@ app.get('/', (req, res) => {
   res.send('Hola, bienvenido al servidor');
 });
 
-app.use('/graphql', graphqlHTTP({
+app.use('/graphql', graphqlHTTP(async (req) => ({
   schema,
-  graphiql: true,
-}));
+  graphiql: false,
+  context: {
+    token: req.headers['auth-token'],
+  },
+})));
 
 module.exports = app;

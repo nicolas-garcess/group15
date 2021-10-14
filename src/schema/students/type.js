@@ -7,7 +7,7 @@ const studentTypes = `
     type Mutation {
       createStudent(input: StudentInput!): Student
       updateStudent(id: String!, input: StudentUpdate!): Student
-      updatePassword(id: String!, password: String!): Student
+      updateStudentPassword(id: String!, password: String!): Student
       deleteStudentById(id: String!): Response
     }
 
