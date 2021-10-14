@@ -9,6 +9,10 @@ const ProjectSchema = new Schema({
     minLength: 3,
     maxLength: 15,
   },
+  nombre: {
+    type: String,
+    required: true,
+  },
   descripcion: {
     type: String,
     required: true,

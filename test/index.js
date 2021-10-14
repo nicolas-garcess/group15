@@ -97,6 +97,7 @@ describe('Researchers schema validation', () => {
 
 const project = new Project({
   idProyecto: 'proyecto001',
+  nombre: 'nombre proyecto 1',
   descripcion: 'descripción proyecto 1',
   objetivos: {
     objetivoGeneral: {

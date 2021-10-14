@@ -10,10 +10,26 @@ const {
 const {
   getStudentByEmail, getStudentById, parseResponse, parseStudent,
 } = require('./data');
-const { schemaCreateStudent, schemaUpdateStudent, schemaUserId } = require('../validations');
+const {
+  schemaCreateStudent,
+  schemaUpdateStudent,
+  schemaUserId,
+  verifyResearcher,
+  verifyUser,
+  hashPassword,
+} = require('../../helpers');
 
 const studentMutations = {
-  async createStudent(_, { input }) {
+  async createStudent(_, { input }, { token }) {
+    const { message, isDenied } = verifyResearcher(token);
+
+    if (isDenied) {
+      throw new GraphQLError({
+        error: message,
+        wasSuccessful: false,
+      });
+    }
+
     const { error } = schemaCreateStudent.validate(
       input,
       { abortEarly: false },
@@ -36,7 +52,10 @@ const studentMutations = {
 
         if (studentById === null) {
           addStudentToProject(input.id, input.idProyecto);
-          const studentToCreate = new Student(input);
+
+          const hashedPassword = await hashPassword(input.contrasena, 10);
+
+          const studentToCreate = new Student({ ...input, contrasena: hashedPassword });
           const studentCreated = await studentToCreate.save();
 
           return studentCreated;
@@ -58,7 +77,23 @@ const studentMutations = {
       wasSuccessful: false,
     });
   },
-  async updateStudent(_, { id, input }) {
+  async updateStudent(_, { id, input }, { token }) {
+    const { data, message, isDenied } = verifyUser(token);
+
+    if (isDenied) {
+      throw new GraphQLError({
+        error: message,
+        wasSuccessful: false,
+      });
+    }
+
+    if (data.rol === 'student' && data.id !== id) {
+      throw new GraphQLError({
+        error: 'You do not have the permission',
+        wasSuccessful: false,
+      });
+    }
+
     const { error } = schemaUpdateStudent.validate(
       { id, ...input },
       { abortEarly: false },
@@ -117,10 +152,36 @@ const studentMutations = {
       wasSuccessful: false,
     });
   },
-  async updatePassword(_, { id, password }) {
-    return Student.findOneAndUpdate({ id }, { contrasena: password }, { new: true });
+  async updateStudentPassword(_, { id, password }, { token }) {
+    const { data, message, isDenied } = verifyUser(token);
+
+    if (isDenied) {
+      throw new GraphQLError({
+        error: message,
+        wasSuccessful: false,
+      });
+    }
+
+    if (data.id !== id) {
+      throw new GraphQLError({
+        error: 'You do not have the permission',
+        wasSuccessful: false,
+      });
+    }
+    const hashedPassword = await hashPassword(password, 10);
+
+    return Student.findOneAndUpdate({ id }, { contrasena: hashedPassword }, { new: true });
   },
-  async deleteStudentById(_, { id }) {
+  async deleteStudentById(_, { id }, { token }) {
+    const { message, isDenied } = verifyResearcher(token);
+
+    if (isDenied) {
+      throw new GraphQLError({
+        error: message,
+        wasSuccessful: false,
+      });
+    }
+
     const { error } = schemaUserId.validate(
       { id },
       { abortEarly: false },

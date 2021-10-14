@@ -4,6 +4,7 @@ const Joi = require('joi');
 
 const schemaCreateProject = Joi.object({
   idProyecto: Joi.string().min(3).max(15).required(),
+  nombre: Joi.string().min(3).required(),
   descripcion: Joi.string().min(1).required(),
   objetivos: Joi.object().required(),
   presupuesto: Joi.number().required(),
@@ -22,6 +23,7 @@ const schemaProjectId = Joi.object({
 
 const schemaUpdateProject = Joi.object({
   idProyecto: Joi.string().min(3).max(15).required(),
+  nombre: Joi.string().min(3).required(),
   descripcion: Joi.string().min(1),
   objetivos: Joi.object(),
   presupuesto: Joi.number(),

@@ -16,6 +16,7 @@ const researcherTypes = `
 
     type Project {
       idProyecto: String
+      nombre: String
       descripcion: String
       objetivos: Objectives
       presupuesto: Float
@@ -38,6 +39,7 @@ const researcherTypes = `
 
     type ProjectResponse {
       idProyecto: String
+      nombre: String
       descripcion: String
       objetivos: Objectives
       presupuesto: Float
@@ -54,6 +56,7 @@ const researcherTypes = `
 
     input ProjectInput {
       idProyecto: String!
+      nombre: String!
       descripcion: String!
       objetivos: ObjectivesInput!
       presupuesto: Float!
@@ -67,6 +70,7 @@ const researcherTypes = `
     }
 
     input ProjectUpdate {
+      nombre: String
       descripcion: String
       objetivos: ObjectivesUpdate
       presupuesto: Float
