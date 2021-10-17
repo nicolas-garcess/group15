@@ -1,9 +1,13 @@
 const express = require('express');
+const cors = require('cors');
 const { graphqlHTTP } = require('express-graphql');
 const schema = require('./schema');
 require('dotenv').config();
 
 const app = express();
+
+// Cors
+app.use(cors());
 
 // Settings
 app.set('port', process.env.PORT || 3500);
@@ -15,9 +19,12 @@ app.get('/', (req, res) => {
 
 app.use('/graphql', graphqlHTTP(async (req) => ({
   schema,
+  // graphiql: {
+  //   headerEditorEnabled: true,
+  // },
   graphiql: false,
   context: {
-    token: req.headers['auth-token'],
+    token: req.headers.auth,
   },
 })));
 
